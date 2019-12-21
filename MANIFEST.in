@@ -1,0 +1,3 @@
+recursive-include gdalhelpers
+prune tests
+global-exclude *.py[co]
