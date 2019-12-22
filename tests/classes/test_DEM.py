@@ -115,9 +115,10 @@ class DEMClassTests(unittest.TestCase):
         layer = ds.GetLayer()
         geom_list = layer_helpers.get_geometry_list(layer)
         values = self.dsm.get_values_points_bilinear(geom_list)
-        self.assertListEqual(values, [1006.5723289546559, 999.4730636420012,
-                                      988.1533017418318, 994.1223613936003,
-                                      1002.6480790314989])
+
+        self.assertListEqual(values, [1006.5723289546047, 999.4730636420511,
+                                      988.1533017414407, 994.122361393572,
+                                      1002.648079030307])
         ds = None
 
     def test_print(self):
