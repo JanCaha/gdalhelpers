@@ -35,7 +35,10 @@ def check_is_layer_geometry_type(variable: ogr.Layer,
                         format(variable_name, expected_geometry_name, geometry_name))
 
 
-def does_field_exist(layer: ogr.Layer, field_name: str) -> bool:
+def does_field_exist(layer: ogr.Layer, field_name: Union[str, None]) -> bool:
+
+    if field_name is None:
+        return False
 
     field_index = layer.GetLayerDefn().GetFieldIndex(field_name)
 
