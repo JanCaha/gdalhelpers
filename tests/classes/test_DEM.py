@@ -82,6 +82,17 @@ class DEMClassTests(unittest.TestCase):
                                1010.77162,
                                places=2)
 
+        self.assertAlmostEqual(self.dsm.get_value_bilinear(-336323.14, -1189196.80),
+                               self.dsm.get_nodata_value(),
+                               places=6)
+
+        with self.assertRaisesRegex(TypeError, "px must be number"):
+            self.dsm.get_value_bilinear("aa", -1189050.119)
+
+        with self.assertRaisesRegex(TypeError, "py must be number"):
+            self.dsm.get_value_bilinear(-336470.645, "aa")
+
+
     def test_get_values_bilinear(self):
         positions = [[-336470.645, -1189050.119],
                      [-336405.645, -1189162.119],
@@ -93,6 +104,13 @@ class DEMClassTests(unittest.TestCase):
         self.assertAlmostEqual(values[1], 1016.941226865536, places=6)
         self.assertAlmostEqual(values[2], self.dsm.get_nodata_value(), places=6)
 
+        with self.assertRaisesRegex(ValueError, "Every element of list of positions must be of length `2`"):
+            positions = [[-336470.645, -1189050.119],
+                         [-336405.645, -1189162.119, 3],
+                         [-336323.14, -1189196.80]]
+
+            values = self.dsm.get_values_bilinear(positions)
+
     def test_get_values_points_bilinear(self):
         ds = ogr.Open(POINTS_PATH)
         layer = ds.GetLayer()
@@ -101,3 +119,6 @@ class DEMClassTests(unittest.TestCase):
         self.assertListEqual(values, [1006.5723289546559, 999.4730636420012,
                                       988.1533017418318, 994.1223613936003,
                                       1002.6480790314989])
+
+    def test_print(self):
+        self.assertIsInstance(self.dsm.__str__(), str)
