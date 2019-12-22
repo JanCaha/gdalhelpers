@@ -19,13 +19,24 @@ class ValuesCheckTests(unittest.TestCase):
         with self.assertRaisesRegex(TypeError, "must be number"):
             values_check.check_return_value_is_angle("test", "val")
 
-        self.assertAlmostEqual(values_check.check_return_value_is_angle(math.pi + 0.1, "val"),
-                               0.1, places=6)
-        self.assertAlmostEqual(values_check.check_return_value_is_angle(-math.pi - 0.5, "val"),
-                               -0.5, places=6)
+        self.assertAlmostEqual(values_check.check_return_value_is_angle(math.pi*1.1, "val"),
+                               -math.pi*0.9, places=6)
+        self.assertAlmostEqual(values_check.check_return_value_is_angle(-math.pi*1.5, "val"),
+                               math.pi*0.5, places=6)
         self.assertAlmostEqual(values_check.check_return_value_is_angle(0, "val"),
                                0, places=6)
         self.assertAlmostEqual(values_check.check_return_value_is_angle(0.2345, "val"),
                                0.2345, places=6)
         self.assertAlmostEqual(values_check.check_return_value_is_angle(-1.2345, "val"),
                                -1.2345, places=6)
+
+    def test_check_return_value_is_angle_degrees(self):
+        with self.assertRaisesRegex(TypeError, "must be number"):
+            values_check.check_return_value_is_angle_degrees("test", "val")
+
+        self.assertEqual(values_check.check_return_value_is_angle_degrees(0, "val"), 0)
+        self.assertEqual(values_check.check_return_value_is_angle_degrees(90, "val"), 90)
+        self.assertEqual(values_check.check_return_value_is_angle_degrees(180, "val"), 180)
+        self.assertEqual(values_check.check_return_value_is_angle_degrees(360, "val"), 360)
+        self.assertEqual(values_check.check_return_value_is_angle_degrees(370, "val"), 10)
+        self.assertEqual(values_check.check_return_value_is_angle_degrees(-10, "val"), 350)
