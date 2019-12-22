@@ -4,7 +4,7 @@ import math
 import os
 import warnings
 import numpy as np
-import numbers.Number
+import numbers
 from gdalhelpers.checks import values_checks, datasource_checks, layer_checks
 from gdalhelpers.helpers import layer_helpers, datasource_helpers, geometry_helpers
 
