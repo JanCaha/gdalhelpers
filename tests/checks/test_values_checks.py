@@ -40,3 +40,11 @@ class ValuesCheckTests(unittest.TestCase):
         self.assertEqual(values_check.check_return_value_is_angle_degrees(360, "val"), 360)
         self.assertEqual(values_check.check_return_value_is_angle_degrees(370, "val"), 10)
         self.assertEqual(values_check.check_return_value_is_angle_degrees(-10, "val"), 350)
+
+    def test_check_number(self):
+        self.assertIsNone(values_check.check_number(5, "val"))
+        self.assertIsNone(values_check.check_number(3.5, "val"))
+        self.assertIsNone(values_check.check_number(4e-5, "val"))
+
+        with self.assertRaisesRegex(TypeError, "must be number"):
+            values_check.check_number("test", "val")
