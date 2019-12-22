@@ -20,6 +20,12 @@ jobs:
           sudo apt-get update
           sudo apt-get install gdal-bin python3-numpy libgdal-dev libgeos-dev libproj-dev
 
+      - name: Cache Python packages
+        uses: actions/cache@v1
+        with:
+          path: ~/.cache/pip
+          key: pip-${{ hashFiles('requirements.txt') }}
+
       - name: Install packages
         run: |
           pip install numpy
