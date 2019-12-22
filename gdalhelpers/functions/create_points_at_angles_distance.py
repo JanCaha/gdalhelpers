@@ -1,15 +1,16 @@
 from osgeo import ogr
 from typing import List
+from itertools import repeat
 import os
 import warnings
-from gdalhelpers.checks import geometry_checks, layer_checks, datasource_checks
+from gdalhelpers.checks import geometry_checks, layer_checks, datasource_checks, values_checks
 from gdalhelpers.helpers import layer_helpers, datasource_helpers, geometry_helpers
 
 
 def create_points_at_angles_distance(input_points_ds: ogr.DataSource,
                                      angles: List[float],
                                      distance: float,
-                                     input_points_id_field: str = None) -> ogr.Layer:
+                                     input_points_id_field: str = None) -> ogr.DataSource:
 
     output_points_ds = datasource_helpers.create_temp_gpkg_datasource()
 
@@ -21,6 +22,9 @@ def create_points_at_angles_distance(input_points_ds: ogr.DataSource,
                                                                                          ogr.wkbPoint25D,
                                                                                          ogr.wkbLineStringM,
                                                                                          ogr.wkbPointZM])
+    values_checks.check_value_is_zero_or_positive(distance, "distance")
+
+    angles = list(map(values_checks.check_return_value_is_angle, angles, repeat("angles")))
 
     input_points_srs = input_points_layer.GetSpatialRef()
 
@@ -29,7 +33,7 @@ def create_points_at_angles_distance(input_points_ds: ogr.DataSource,
         warnings.warn(
             "Field `{0}` does not exist in `{1}`. Defaulting to FID."
                 .format(input_points_id_field,
-                        os.path.basename(input_points_ds))
+                        os.path.basename(input_points_ds.GetDescription()))
         )
     else:
         if not layer_checks.is_field_of_type(input_points_layer, input_points_id_field, ogr.OFTInteger):
@@ -37,7 +41,7 @@ def create_points_at_angles_distance(input_points_ds: ogr.DataSource,
             warnings.warn(
                 "Field `{0}` in `{1}` is not `Integer`. Defaulting to FID."
                     .format(input_points_id_field,
-                            os.path.basename(input_points_ds))
+                            os.path.basename(input_points_ds.GetDescription()))
             )
 
     if input_points_id_field is None:
@@ -77,4 +81,4 @@ def create_points_at_angles_distance(input_points_ds: ogr.DataSource,
 
             output_points_layer.CreateFeature(output_point_feature)
 
-    return output_points_layer
+    return output_points_ds
