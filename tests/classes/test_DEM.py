@@ -22,7 +22,7 @@ class DEMClassTests(unittest.TestCase):
         self.dsm = DEM(self.path_to_raster)
 
     def tearDown(self):
-        pass
+        self.dsm = None
 
     def test_init(self):
         self.assertIsInstance(DEM(self.path_to_raster), DEM)
@@ -92,7 +92,6 @@ class DEMClassTests(unittest.TestCase):
         with self.assertRaisesRegex(TypeError, "py must be number"):
             self.dsm.get_value_bilinear(-336470.645, "aa")
 
-
     def test_get_values_bilinear(self):
         positions = [[-336470.645, -1189050.119],
                      [-336405.645, -1189162.119],
@@ -119,6 +118,7 @@ class DEMClassTests(unittest.TestCase):
         self.assertListEqual(values, [1006.5723289546559, 999.4730636420012,
                                       988.1533017418318, 994.1223613936003,
                                       1002.6480790314989])
+        ds = None
 
     def test_print(self):
         self.assertIsInstance(self.dsm.__str__(), str)
