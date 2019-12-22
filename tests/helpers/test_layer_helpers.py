@@ -49,6 +49,10 @@ class LayerHelpersTests(unittest.TestCase):
 
     def test_get_geometry_list(self):
         layer = self.ds_points.GetLayer()
+        feature_count = layer.GetFeatureCount()
+        geom_list = layer_helpers.get_geometry_list(layer)
+        layer = None
 
-        self.assertIsInstance(layer_helpers.get_geometry_list(layer), list)
-        self.assertEqual(len(layer_helpers.get_geometry_list(layer)), layer.GetFeatureCount())
+        self.assertIsInstance(geom_list, list)
+        self.assertEqual(len(geom_list), feature_count)
+        self.assertIsInstance(geom_list[0], ogr.Geometry)
