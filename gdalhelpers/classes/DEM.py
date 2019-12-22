@@ -72,10 +72,10 @@ class DEM:
         return cls(path=gdal_raster.GetDescription())
 
     def __str__(self):
-        return "Raster from `{0}` with sizes({1},{2}) using projection {3}.".format(self.path,
-                                                                                    self.nx,
-                                                                                    self.ny,
-                                                                                    self.ds.GetProjection().ExportToWkt())
+        return "Raster from `{0}` with sizes(`{1}`, `{2}`) using projection `{3}`.".format(self.path,
+                                                                                           self.nx,
+                                                                                           self.ny,
+                                                                                           self.ds.GetProjection())
 
     def __del__(self):
         self.ds = None
