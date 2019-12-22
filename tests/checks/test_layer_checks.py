@@ -1,8 +1,11 @@
 from osgeo import ogr
 import unittest
 import tempfile
+import os
 import gdalhelpers.checks.layer_checks as layer_checks
 
+POINTS_PATH = os.path.join(os.path.dirname(__file__), "..", "test_data", "points.gpkg")
+POINT_PATH = os.path.join(os.path.dirname(__file__), "..", "test_data", "single_point.gpkg")
 
 class LayerChecksTests(unittest.TestCase):
 
@@ -58,3 +61,13 @@ class LayerChecksTests(unittest.TestCase):
 
         with self.assertRaisesRegex(TypeError, "must be of geometry type"):
             layer_checks.check_is_layer_geometry_type(self.layer_point, "layer", [ogr.wkbPolygon, ogr.wkbLineString])
+
+    def test_check_number_of_features(self):
+
+        ds_points = ogr.Open(POINTS_PATH)
+        ds_point = ogr.Open(POINT_PATH)
+
+        self.assertIsNone(layer_checks.check_number_of_features(ds_point.GetLayer(), "point", number=1))
+
+        with self.assertRaisesRegex(AttributeError, "must contain only"):
+            layer_checks.check_number_of_features(ds_points.GetLayer(), "points", number=1)
