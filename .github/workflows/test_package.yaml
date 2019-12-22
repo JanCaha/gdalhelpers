@@ -18,7 +18,7 @@ jobs:
         run: |
           sudo add-apt-repository ppa:ubuntugis/ubuntugis-unstable
           sudo apt-get update
-          sudo apt-get install gdal python3-numpy
+          sudo apt-get install gdal-bin python3-numpy
 
       - name: Install packages
         run: pip install -r requirements.txt
