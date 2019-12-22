@@ -12,9 +12,9 @@ from gdalhelpers.helpers import layer_helpers, datasource_helpers, geometry_help
 def create_points_at_angles_distance_in_direction(start_points: ogr.DataSource,
                                                   main_direction_point: ogr.DataSource,
                                                   distance: numbers.Number,
-                                                  output_points_ds: ogr.DataSource,
-                                                  angle_offset: numbers.Number = ((2*math.pi)/360)*10,
-                                                  angle_density: numbers.Number = (2*math.pi)/360,
+                                                  angle_offset: numbers.Number = 10,
+                                                  angle_density: numbers.Number = 1,
+                                                  angles_specification_degrees: bool = True,
                                                   input_points_id_field: str = None) -> str:
 
     output_points_ds = datasource_helpers.create_temp_gpkg_datasource()
@@ -23,6 +23,12 @@ def create_points_at_angles_distance_in_direction(start_points: ogr.DataSource,
     datasource_checks.check_is_ogr_datasource(main_direction_point, "main_direction_point")
 
     values_checks.check_value_is_zero_or_positive(distance, "distance")
+    values_checks.check_number(angle_offset, "angle_offset")
+    values_checks.check_number(angle_density, "angle_density")
+
+    if angles_specification_degrees:
+        angle_offset = ((2*math.pi)/360)*angle_offset
+        angle_density = ((2*math.pi)/360)*angle_density
 
     input_points_layer = start_points.GetLayer()
     layer_checks.check_is_layer_geometry_type(input_points_layer, "input_points_layer", [ogr.wkbPoint, ogr.wkbPoint25D,
@@ -40,14 +46,14 @@ def create_points_at_angles_distance_in_direction(start_points: ogr.DataSource,
             input_points_id_field = None
             warnings.warn(
                 "Field {0} does not exist in {1}. Defaulting to FID.".format(input_points_id_field,
-                                                                             os.path.basename(start_points))
+                                                                             os.path.basename(start_points.GetDescription()))
             )
         else:
-            if not layer_checks.is_field_of_type(input_points_layer, input_points_id_field, "Integer"):
+            if not layer_checks.is_field_of_type(input_points_layer, input_points_id_field, ogr.OFTInteger):
                 input_points_id_field = None
                 warnings.warn(
                     "Field {0} in {1} is not `Integer`. Defaulting to FID.".format(input_points_id_field,
-                                                                                   os.path.basename(start_points))
+                                                                                   os.path.basename(start_points.GetDescription()))
                 )
 
     if input_points_id_field is None:
@@ -57,12 +63,12 @@ def create_points_at_angles_distance_in_direction(start_points: ogr.DataSource,
 
     field_name_angle = "angle"
 
-    output_points_layer = layer_checks.create_layer_points(output_points_ds, input_points_srs, "points")
+    output_points_layer = layer_helpers.create_layer_points(output_points_ds, input_points_srs, "points")
 
     fields = {field_name_id: ogr.OFTInteger,
               field_name_angle: ogr.OFTReal}
 
-    layer_checks.add_fields_from_dict(output_points_layer, fields)
+    layer_helpers.add_fields_from_dict(output_points_layer, fields)
 
     output_points_def = output_points_layer.GetLayerDefn()
 
@@ -97,4 +103,4 @@ def create_points_at_angles_distance_in_direction(start_points: ogr.DataSource,
 
                 output_points_layer.CreateFeature(output_point_feature)
 
-        return output_points_layer
+        return output_points_ds
