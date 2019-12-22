@@ -195,16 +195,16 @@ class DEM:
 
         return values
 
-    def get_values_points_bilinear(self, points: List[str]):
+    def get_values_points_bilinear(self, points: List[ogr.Geometry]):
 
         values: list = [None] * len(points)
         i: int = 0
 
         for p in points:
-            geometry_checks.check_is_wkt_geometry(p, "point[{}]".format(i))
+            geometry_checks.check_variable_geometry(p, "point[{}]".format(i), [ogr.wkbPoint, ogr.wkbPoint25D,
+                                                                               ogr.wkbPointM, ogr.wkbPointZM])
 
-            geom = ogr.CreateGeometryFromWkt(p)
-            values[i] = self.get_value_bilinear(geom.GetX(), geom.GetY())
+            values[i] = self.get_value_bilinear(p.GetX(), p.GetY())
             i += 1
 
         return values
