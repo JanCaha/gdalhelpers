@@ -65,5 +65,5 @@ def check_number_of_features(layer: ogr.Layer,
                              number: int):
 
     if not layer.GetFeatureCount() == 1:
-        raise AttributeError("Layer `{0}` must contain only {1} feature/s. Currently there are `{2}` features.".
+        raise AttributeError("Layer `{0}` must contain only `{1}` feature/s. Currently there are `{2}` features.".
                              format(variable_name, number, layer.GetFeatureCount()))
