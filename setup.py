@@ -13,6 +13,7 @@ setup(name='gdalhelpers',
           'markdown',
           'gdal',
           'numpy',
+          'angles',
           'nose'
       ],
       zip_safe=False,
