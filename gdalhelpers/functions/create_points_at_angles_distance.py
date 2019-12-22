@@ -2,6 +2,7 @@ from osgeo import ogr
 from typing import List
 from itertools import repeat
 import os
+import math
 import warnings
 from gdalhelpers.checks import geometry_checks, layer_checks, datasource_checks, values_checks
 from gdalhelpers.helpers import layer_helpers, datasource_helpers, geometry_helpers
@@ -10,6 +11,7 @@ from gdalhelpers.helpers import layer_helpers, datasource_helpers, geometry_help
 def create_points_at_angles_distance(input_points_ds: ogr.DataSource,
                                      angles: List[float],
                                      distance: float,
+                                     angles_specification_degrees: bool = True,
                                      input_points_id_field: str = None) -> ogr.DataSource:
 
     output_points_ds = datasource_helpers.create_temp_gpkg_datasource()
@@ -23,6 +25,9 @@ def create_points_at_angles_distance(input_points_ds: ogr.DataSource,
                                                                                          ogr.wkbLineStringM,
                                                                                          ogr.wkbPointZM])
     values_checks.check_value_is_zero_or_positive(distance, "distance")
+
+    if angles_specification_degrees:
+        angles = [math.radians(x) - math.pi for x in angles]
 
     angles = list(map(values_checks.check_return_value_is_angle, angles, repeat("angles")))
 

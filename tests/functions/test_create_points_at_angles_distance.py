@@ -18,13 +18,22 @@ class CreatePointsAtAnglesDistanceTestCase(unittest.TestCase):
 
     def test_create_points_at_angles_distance(self):
 
-        angles = np.arange(-math.pi, math.pi, (2*math.pi)/36).tolist()
-        result = create_points_at_angles_distance(self.points_ds, angles, distance=10)
+        angles = np.arange(0, 360, 10).tolist()
+        result = create_points_at_angles_distance(self.points_ds, angles,
+                                                  distance=10, angles_specification_degrees=True)
 
         self.assertIsInstance(result, ogr.DataSource)
-
         self.assertEqual(result.GetLayer().GetFeatureCount(), self.points_ds.GetLayer().GetFeatureCount() * len(angles))
+
+        angles = np.arange(-math.pi, math.pi, (2*math.pi)/36).tolist()
+        result = create_points_at_angles_distance(self.points_ds, angles,
+                                                  distance=10, angles_specification_degrees=False)
+
+        self.assertIsInstance(result, ogr.DataSource)
+        self.assertEqual(result.GetLayer().GetFeatureCount(), self.points_ds.GetLayer().GetFeatureCount() * len(angles))
+
 
         with self.assertRaisesRegex(TypeError, "must be number"):
             angles_wrong = ["string"] + angles
-            result = create_points_at_angles_distance(self.points_ds, angles_wrong, distance=20)
+            result = create_points_at_angles_distance(self.points_ds, angles_wrong,
+                                                      distance=20, angles_specification_degrees=False)
