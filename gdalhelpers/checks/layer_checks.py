@@ -1,5 +1,6 @@
 from osgeo import ogr
 from typing import Union, List
+from gdalhelpers.checks import srs_checks
 
 
 def check_is_layer(variable, variable_name: str) -> None:
@@ -70,3 +71,14 @@ def check_number_of_features(layer: ogr.Layer,
     if not layer.GetFeatureCount() == 1:
         raise AttributeError("Layer `{0}` must contain only `{1}` feature/s. Currently there are `{2}` features.".
                              format(variable_name, number, layer.GetFeatureCount()))
+
+
+def check_is_projected(layer: ogr.Layer, variable_name: str,) -> None:
+    if layer.GetSpatialRef() is None:
+        raise ValueError("`{0}` layer does not have Spatial Reference specified.")
+    else:
+        srs_checks.check_srs_projected(layer.GetSpatialRef(), variable_name)
+
+
+def check_layers_sr_are_same(layer1: ogr.Layer, layer2: ogr.Layer) -> None:
+    srs_checks.check_srs_are_same(layer1.GetSpatialRef(), layer2.GetSpatialRef())
