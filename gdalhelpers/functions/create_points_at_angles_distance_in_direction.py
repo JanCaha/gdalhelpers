@@ -15,7 +15,7 @@ def create_points_at_angles_distance_in_direction(start_points: ogr.DataSource,
                                                   angle_offset: numbers.Number = 10,
                                                   angle_density: numbers.Number = 1,
                                                   angles_specification_degrees: bool = True,
-                                                  input_points_id_field: str = None) -> str:
+                                                  input_points_id_field: str = None) -> ogr.DataSource:
 
     output_points_ds = datasource_helpers.create_temp_gpkg_datasource()
 
