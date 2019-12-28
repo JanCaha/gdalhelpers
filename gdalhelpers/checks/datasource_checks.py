@@ -2,7 +2,7 @@ from osgeo import ogr
 import warnings
 
 
-def check_is_ogr_datasource(variable, variable_name: str) -> None:
+def check_is_ogr_datasource(variable: ogr.DataSource, variable_name: str) -> None:
     """
     Checks if variable is `ogr.DataSource` type, otherwise raises `TypeError`.
 
@@ -24,6 +24,8 @@ def warn_shapefile_output(ds: ogr.DataSource, ds_name: str) -> None:
     :param ds_name: string. Variable name for error message.
     :return: nothing
     """
+
+    check_is_ogr_datasource(ds, ds_name)
 
     if ds.GetDriver().GetDescription() == "ESRI Shapefile":
         warnings.warn(
