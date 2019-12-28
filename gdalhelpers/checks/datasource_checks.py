@@ -4,11 +4,24 @@ import warnings
 
 def check_is_ogr_datasource(variable: ogr.DataSource, variable_name: str) -> None:
     """
-    Checks if variable is `ogr.DataSource` type, otherwise raises `TypeError`.
+    Checks if `variable` is `ogr.DataSource` type, otherwise raises `TypeError`.
 
-    :param variable: variable to check
-    :param variable_name: string. Variable name for error message.
-    :return: nothing
+    Parameters
+    ----------
+    variable : ogr.DataSource
+        Variable to check.
+
+    variable_name : str
+        Variable name for error message.
+
+    Returns
+    -------
+    None
+
+    Raises
+    ------
+    TypeError
+        If `variable` is not `ogr.DataSource`.
     """
 
     if not isinstance(variable, ogr.DataSource):
@@ -18,11 +31,25 @@ def check_is_ogr_datasource(variable: ogr.DataSource, variable_name: str) -> Non
 
 def warn_shapefile_output(ds: ogr.DataSource, ds_name: str) -> None:
     """
-    Prints `warning` if provided `ogr.DataSource` (`ds`) is `ESRI Shapefile`.
+    Prints `warning` if provided `ogr.DataSource` (`ds`) has driver `ESRI Shapefile`.
 
-    :param ds: ogr.DataSource to check.
-    :param ds_name: string. Variable name for error message.
-    :return: nothing
+    Parameters
+    ----------
+    ds : ogr.DataSource
+        Variable to check.
+
+    ds_name : str
+        Variable name for error message.
+
+    Returns
+    -------
+    None
+
+    Warns
+    -------
+    UserWarning
+        If driver of `ds` is `ESRI Shapefile`.
+
     """
 
     check_is_ogr_datasource(ds, ds_name)

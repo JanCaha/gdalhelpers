@@ -7,10 +7,24 @@ def check_number(variable: numbers.Number, variable_name: str) -> None:
     """
     Checks if `variable` is valid number using class `numbers.Number`. Raises `TypeError` if it is not.
 
-    :param variable:
-    :param variable_name: string. Variable name for error message.
-    :return: nothing
+    Parameters
+    ----------
+    variable : numbers.Number
+        Variable to check.
+
+    variable_name : str
+        Variable name for error message.
+
+    Returns
+    -------
+    None
+
+    Raises
+    ------
+    TypeError
+        If `variable` is not `numbers.Number`.
     """
+
     if not isinstance(variable, numbers.Number):
         raise TypeError("`{0}` must be number. The variable is `{1}`.".format(variable_name, type(variable).__name__))
 
@@ -19,10 +33,24 @@ def check_value_is_zero_or_positive(variable: numbers.Number, variable_name: str
     """
     Checks if `variable` is equal or higher than zero. Raises `TypeError` if it is not.
 
-    :param variable:
-    :param variable_name: string. Variable name for error message.
-    :return: nothing
+    Parameters
+    ----------
+    variable : numbers.Number
+        Variable to check.
+
+    variable_name : str
+        Variable name for error message.
+
+    Returns
+    -------
+    None
+
+    Raises
+    ------
+    TypeError
+        If `variable` is not number equal or higher than 0.
     """
+
     check_number(variable, variable_name)
 
     if variable < 0:
@@ -34,10 +62,21 @@ def check_return_value_is_angle(theta: numbers.Number, variable_name: str) -> fl
     Checks if `theta` is number and normalizes it into range `[-pi, pi]`.
     Values outside of the range are transformed into the range.
 
-    :param theta: numbers.Number (float or integer). Represents angle.
-    :param variable_name: string. Variable name for error message.
-    :return: float. Value of theta normalized into range [-pi, pi].
+    Parameters
+    ----------
+    theta : numbers.Number
+        Represents angle in radians.
+
+    variable_name : str
+        Variable name for error message.
+
+    Returns
+    -------
+    float
+        Value of `theta` normalized into range [-pi, pi].
+
     """
+
     check_number(theta, variable_name)
 
     if not (-math.pi <= theta <= math.pi):
@@ -54,9 +93,19 @@ def check_return_value_is_angle_degrees(theta: numbers.Number, variable_name: st
     Checks if `theta` is number and normalizes it into range `[0, 360]`.
     Values outside of the range are transformed into the range.
 
-    :param theta: numbers.Number (float or integer). Represents angle.
-    :param variable_name: string. Variable name for error message.
-    :return: float. Value of theta normalized into range [0, 360].
+    Parameters
+    ----------
+    theta : numbers.Number
+        Represents angle in degrees.
+
+    variable_name : str
+        Variable name for error message.
+
+    Returns
+    -------
+    float
+        Value of `theta` normalized into range [0, 360].
+
     """
 
     check_number(theta, variable_name)
