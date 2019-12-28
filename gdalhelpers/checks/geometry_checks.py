@@ -7,6 +7,16 @@ from typing import Union, List
 def check_variable_geometry(geometry: ogr.Geometry,
                             variable_name: str,
                             expected_geometry_type: Union[int, List[int]]) -> None:
+    """
+    Checks if `geometry` (`ogr.Geometry`) is of expected type or types, raises `TypeError` if not.
+
+    :param geometry: ogr.Geometry.
+    :param variable_name: string. Variable name for error message.
+    :param expected_geometry_type: either int or list of ints. Only values provided by ogr.wkbPoint etc. makes sense.
+    Can be constructed as `expected_geometry_type=ogr.wkbPoint` or
+    `[expected_geometry_type=ogr.wkbPoint, ogr.wkbPoint25D, ogr.wkbPointZM ]`.
+    :return: nothing
+    """
 
     if not isinstance(geometry, ogr.Geometry):
         raise TypeError("`{0}` must be of class `ogr.Geometry`. `{0}` is of type `{1}`.".
@@ -35,5 +45,12 @@ def check_variable_geometry(geometry: ogr.Geometry,
 
 
 def check_is_wkt_geometry(string: str, variable_name: str) -> None:
+    """
+    Checks if the provided `string` is a valid WKT. Raises `TypeError` otherwise.
+
+    :param string: string. To check if it is WKT.
+    :param variable_name: string. Variable name for error message.
+    :return:
+    """
     if ogr.CreateGeometryFromWkt(string) is None:
         raise TypeError("`{0}` is not a valid WKT. `{1}` cannot be loaded as geometry.".format(variable_name, string))
