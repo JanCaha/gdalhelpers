@@ -2,11 +2,11 @@ from osgeo import osr
 from typing import Any
 
 
-def check_srs(srs: Any, srs_name: str):
+def check_srs(srs: osr.SpatialReference, srs_name: str):
     """
     Checks if `srs` is `osr.SpatialReference`, raises `ValueError` otherwise.
 
-    :param srs: Any. Value to check.
+    :param srs: Value to check.
     :param srs_name: string. Variable name for error message.
     :return: nothing
     """
