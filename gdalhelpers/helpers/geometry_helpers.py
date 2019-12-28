@@ -15,7 +15,7 @@ def line_segmentize(line: ogr.Geometry,
     if allowed_input_types is None:
         allowed_input_types = [ogr.wkbLineString, ogr.wkbLineString25D, ogr.wkbLineStringM, ogr.wkbLineStringZM]
 
-    geometry_checks.check_variable_geometry(line, "line", allowed_input_types)
+    geometry_checks.check_variable_expected_geometry(line, "line", allowed_input_types)
 
     if segment_length is not None:
         values_checks.check_value_is_zero_or_positive(segment_length, "segment_length")
@@ -37,9 +37,9 @@ def line_create_3_points(p1: ogr.Geometry,
     if allowed_input_types is None:
         allowed_input_types = [ogr.wkbPoint, ogr.wkbPoint25D, ogr.wkbPointM, ogr.wkbPointZM]
 
-    geometry_checks.check_variable_geometry(p1, "p1", allowed_input_types)
-    geometry_checks.check_variable_geometry(p2, "p2", allowed_input_types)
-    geometry_checks.check_variable_geometry(p3, "p3", allowed_input_types)
+    geometry_checks.check_variable_expected_geometry(p1, "p1", allowed_input_types)
+    geometry_checks.check_variable_expected_geometry(p2, "p2", allowed_input_types)
+    geometry_checks.check_variable_expected_geometry(p3, "p3", allowed_input_types)
 
     line = ogr.Geometry(ogr.wkbLineString)
 
@@ -60,8 +60,8 @@ def line_create_2_points(p1: ogr.Geometry,
     if allowed_input_types is None:
         allowed_input_types = [ogr.wkbPoint, ogr.wkbPoint25D, ogr.wkbPointM, ogr.wkbPointZM]
 
-    geometry_checks.check_variable_geometry(p1, "p1", allowed_input_types)
-    geometry_checks.check_variable_geometry(p2, "p2", allowed_input_types)
+    geometry_checks.check_variable_expected_geometry(p1, "p1", allowed_input_types)
+    geometry_checks.check_variable_expected_geometry(p2, "p2", allowed_input_types)
 
     line = ogr.Geometry(ogr.wkbLineString)
 
@@ -80,7 +80,7 @@ def line_assign_z_to_vertexes(line_2d: ogr.Geometry,
     if allowed_input_types is None:
         allowed_input_types = [ogr.wkbLineString, ogr.wkbLineString25D, ogr.wkbLineStringM, ogr.wkbLineStringZM]
 
-    geometry_checks.check_variable_geometry(line_2d, "line_2d", allowed_input_types)
+    geometry_checks.check_variable_expected_geometry(line_2d, "line_2d", allowed_input_types)
 
     line_3d = ogr.Geometry(ogr.wkbLineStringZM)
 
@@ -101,8 +101,8 @@ def angle_points(p1: ogr.Geometry,
     if allowed_input_types is None:
         allowed_input_types = [ogr.wkbPoint, ogr.wkbPoint25D, ogr.wkbPointM, ogr.wkbPointZM]
 
-    geometry_checks.check_variable_geometry(p1, "p1", allowed_input_types)
-    geometry_checks.check_variable_geometry(p2, "p2", allowed_input_types)
+    geometry_checks.check_variable_expected_geometry(p1, "p1", allowed_input_types)
+    geometry_checks.check_variable_expected_geometry(p2, "p2", allowed_input_types)
 
     return math_helpers.horizontal_angle(p1.GetX(), p1.GetY(), p2.GetX(), p2.GetY())
 
@@ -115,7 +115,7 @@ def point_at_angle_distance(p: ogr.Geometry,
     if allowed_input_types is None:
         allowed_input_types = [ogr.wkbPoint, ogr.wkbPoint25D, ogr.wkbPointM, ogr.wkbPointZM]
 
-    geometry_checks.check_variable_geometry(p, "p", allowed_input_types)
+    geometry_checks.check_variable_expected_geometry(p, "p", allowed_input_types)
     values_checks.check_value_is_zero_or_positive(distance, "distance")
     values_checks.check_return_value_is_angle(theta, "theta")
 

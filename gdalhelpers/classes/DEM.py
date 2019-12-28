@@ -201,8 +201,8 @@ class DEM:
         i: int = 0
 
         for p in points:
-            geometry_checks.check_variable_geometry(p, "point[{}]".format(i), [ogr.wkbPoint, ogr.wkbPoint25D,
-                                                                               ogr.wkbPointM, ogr.wkbPointZM])
+            geometry_checks.check_variable_expected_geometry(p, "point[{}]".format(i), [ogr.wkbPoint, ogr.wkbPoint25D,
+                                                                                        ogr.wkbPointM, ogr.wkbPointZM])
 
             values[i] = self.get_value_bilinear(p.GetX(), p.GetY())
             i += 1
