@@ -17,17 +17,17 @@ class GeometryChecksTests(unittest.TestCase):
     def test_check_variable_geometry(self):
 
         with self.assertRaisesRegex(TypeError, "must be of class `ogr.Geometry`"):
-            geometry_checks.check_variable_geometry("test", "val", ogr.wkbPoint)
+            geometry_checks.check_variable_expected_geometry("test", "val", ogr.wkbPoint)
 
         with self.assertRaisesRegex(TypeError, "must be of geometry type/types"):
-            geometry_checks.check_variable_geometry(self.point, "val", ogr.wkbLineString)
+            geometry_checks.check_variable_expected_geometry(self.point, "val", ogr.wkbLineString)
 
         with self.assertRaisesRegexp(TypeError, "must be of geometry type/types"):
-            geometry_checks.check_variable_geometry(self.point, "val", [ogr.wkbPointM, ogr.wkbPointZM])
+            geometry_checks.check_variable_expected_geometry(self.point, "val", [ogr.wkbPointM, ogr.wkbPointZM])
 
-        self.assertIsNone(geometry_checks.check_variable_geometry(self.point, "val", ogr.wkbPoint))
-        self.assertIsNone(geometry_checks.check_variable_geometry(self.point, "val",
-                                                                  [ogr.wkbLineString, ogr.wkbPolygon, ogr.wkbPoint]))
+        self.assertIsNone(geometry_checks.check_variable_expected_geometry(self.point, "val", ogr.wkbPoint))
+        self.assertIsNone(geometry_checks.check_variable_expected_geometry(self.point, "val",
+                                                                           [ogr.wkbLineString, ogr.wkbPolygon, ogr.wkbPoint]))
 
     def test_check_is_wkt_geometery(self):
         self.assertIsNone(geometry_checks.check_is_wkt_geometry("POINT (1120351.5712494177 741921.4223245403)", "val"))
