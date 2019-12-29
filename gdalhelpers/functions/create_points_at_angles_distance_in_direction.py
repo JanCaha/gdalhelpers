@@ -1,19 +1,18 @@
 from osgeo import ogr
-from typing import List
+from typing import List, Union
 import math
 import os
 import warnings
 import numpy as np
-import numbers
 from gdalhelpers.checks import values_checks, datasource_checks, layer_checks
 from gdalhelpers.helpers import layer_helpers, datasource_helpers, geometry_helpers
 
 
 def create_points_at_angles_distance_in_direction(start_points: ogr.DataSource,
                                                   main_direction_point: ogr.DataSource,
-                                                  distance: numbers.Number,
-                                                  angle_offset: numbers.Number = 10,
-                                                  angle_density: numbers.Number = 1,
+                                                  distance: Union[int, float],
+                                                  angle_offset: Union[int, float] = 10,
+                                                  angle_density: Union[int, float] = 1,
                                                   angles_specification_degrees: bool = True,
                                                   input_points_id_field: str = None) -> ogr.DataSource:
 

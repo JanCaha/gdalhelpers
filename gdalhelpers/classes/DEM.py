@@ -1,10 +1,9 @@
 import gdal
 from gdal import osr, ogr
-from typing import List
+from typing import List, Union
 from numpy import floor, array
 import os
 import math
-import numbers
 import warnings
 import gdalhelpers.helpers.math_helpers as math_helpers
 from gdalhelpers.checks import geometry_checks
@@ -13,6 +12,8 @@ from gdalhelpers.checks import geometry_checks
 class DEM:
     """
     Class representing digital elevation model. Based on `gdal.Dataset` with additional functions.
+    Various checks are performed at creation time to ensure usability of the data. `DEM` can only have one band with
+    values and the raster has to projected.
 
     Attributes
     ----------
@@ -157,7 +158,7 @@ class DEM:
         """
         return abs(min(self.gt[1], self.gt[5]))
 
-    def __check_value_is_nodata(self, value: numbers.Number) -> bool:
+    def __check_value_is_nodata(self, value: Union[int, float]) -> bool:
         return (value < self.__gdal_nodata_default) or math_helpers.is_almost_equal(value, self.no_data)
 
     def load_array(self) -> None:
@@ -257,10 +258,10 @@ class DEM:
             Interpolated value of the raster at specified location.
         """
 
-        if not isinstance(px, numbers.Number):
+        if not isinstance(px, (int, float)):
             raise TypeError("px must be number. The variable is of `{}`.".format(type(px)))
 
-        if not isinstance(py, numbers.Number):
+        if not isinstance(py, (int, float)):
             raise TypeError("py must be number. The variable is of `{}`.".format(type(py)))
 
         if self.np_array is None:
