@@ -32,8 +32,7 @@ class CreatePointsAtAnglesDistanceTestCase(unittest.TestCase):
         self.assertIsInstance(result, ogr.DataSource)
         self.assertEqual(result.GetLayer().GetFeatureCount(), self.points_ds.GetLayer().GetFeatureCount() * len(angles))
 
-
-        with self.assertRaisesRegex(TypeError, "must be number"):
+        with self.assertRaisesRegex(TypeError, "must be either `int` or `float`"):
             angles_wrong = ["string"] + angles
             result = create_points_at_angles_distance(self.points_ds, angles_wrong,
                                                       distance=20, angles_specification_degrees=False)

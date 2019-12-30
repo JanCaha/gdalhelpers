@@ -6,7 +6,7 @@ import math
 class ValuesCheckTests(unittest.TestCase):
 
     def test_check_value_is_zero_or_positive(self):
-        with self.assertRaisesRegex(TypeError, "must be number"):
+        with self.assertRaisesRegex(TypeError, "must be either `int` or `float`"):
             values_check.check_value_is_zero_or_positive("test", "val")
 
         with self.assertRaisesRegex(ValueError, "must be higher than 0"):
@@ -16,7 +16,7 @@ class ValuesCheckTests(unittest.TestCase):
                               type(None))
 
     def test_check_return_value_is_angle(self):
-        with self.assertRaisesRegex(TypeError, "must be number"):
+        with self.assertRaisesRegex(TypeError, "must be either `int` or `float`"):
             values_check.check_return_value_is_angle("test", "val")
 
         self.assertAlmostEqual(values_check.check_return_value_is_angle(math.pi*1.1, "val"),
@@ -31,7 +31,7 @@ class ValuesCheckTests(unittest.TestCase):
                                -1.2345, places=6)
 
     def test_check_return_value_is_angle_degrees(self):
-        with self.assertRaisesRegex(TypeError, "must be number"):
+        with self.assertRaisesRegex(TypeError, "must be either `int` or `float`"):
             values_check.check_return_value_is_angle_degrees("test", "val")
 
         self.assertEqual(values_check.check_return_value_is_angle_degrees(0, "val"), 0)
@@ -46,5 +46,5 @@ class ValuesCheckTests(unittest.TestCase):
         self.assertIsNone(values_check.check_number(3.5, "val"))
         self.assertIsNone(values_check.check_number(4e-5, "val"))
 
-        with self.assertRaisesRegex(TypeError, "must be number"):
+        with self.assertRaisesRegex(TypeError, "must be either `int` or `float`"):
             values_check.check_number("test", "val")

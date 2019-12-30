@@ -68,10 +68,10 @@ class LayerChecksTests(unittest.TestCase):
         self.assertIsNone(layer_checks.check_is_layer_geometry_type(self.layer_point, "layer", [ogr.wkbPolygon,
                                                                                                 ogr.wkbPoint]))
 
-        with self.assertRaisesRegex(TypeError, "must be of geometry type"):
+        with self.assertRaisesRegex(ValueError, "must be of geometry type"):
             layer_checks.check_is_layer_geometry_type(self.layer_point, "layer", ogr.wkbPolygon)
 
-        with self.assertRaisesRegex(TypeError, "must be of geometry type"):
+        with self.assertRaisesRegex(ValueError, "must be of geometry type"):
             layer_checks.check_is_layer_geometry_type(self.layer_point, "layer", [ogr.wkbPolygon, ogr.wkbLineString])
 
     def test_check_number_of_features(self):
@@ -91,7 +91,9 @@ class LayerChecksTests(unittest.TestCase):
             layer_checks.check_is_projected(self.layer_point, "layer_points")
 
     def test_check_layers_sr_are_same(self):
-        self.assertIsNone(layer_checks.check_layers_sr_are_same(self.layer_loaded, self.layer_loaded))
+        self.assertIsNone(layer_checks.check_layers_sr_are_same(self.layer_loaded, "test_srs_1",
+                                                                self.layer_loaded, "test_srs_2"))
 
-        with self.assertRaisesRegex(ValueError, "Spatial Reference of both layers"):
-            layer_checks.check_layers_sr_are_same(self.layer_loaded_4326, self.layer_loaded)
+        with self.assertRaisesRegex(ValueError, "Spatial Reference of both variables"):
+            layer_checks.check_layers_sr_are_same(self.layer_loaded_4326, "test_srs_4326",
+                                                  self.layer_loaded, "test_srs_loaded")

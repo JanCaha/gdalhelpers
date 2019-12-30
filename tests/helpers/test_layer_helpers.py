@@ -28,19 +28,22 @@ class LayerHelpersTests(unittest.TestCase):
         self.ds_points = None
 
     def test_create_layer_points(self):
-        layer = layer_helpers.create_layer_points(self.ds, self.srs, "points")
+        layer_helpers.create_layer_points(self.ds, self.srs, "points")
+        layer = self.ds.GetLayer()
 
         self.assertIsNone(layer_checks.check_is_layer(layer, "layer"))
         self.assertIsNone(layer_checks.check_is_layer_geometry_type(layer, "layer", ogr.wkbPoint))
 
     def test_create_layer_points_25d(self):
-        layer = layer_helpers.create_layer_points_25d(self.ds, self.srs, "points25d")
+        layer_helpers.create_layer_points_25d(self.ds, self.srs, "points25d")
+        layer = self.ds.GetLayer()
 
         self.assertIsNone(layer_checks.check_is_layer(layer, "layer"))
         self.assertIsNone(layer_checks.check_is_layer_geometry_type(layer, "layer", ogr.wkbPoint25D))
 
     def test_create_layer_lines_25d(self):
-        layer = layer_helpers.create_layer_lines_25d(self.ds, self.srs, "lines25d")
+        layer_helpers.create_layer_lines_25d(self.ds, self.srs, "lines25d")
+        layer = self.ds.GetLayer()
 
         self.assertIsNone(layer_checks.check_is_layer(layer, "layer"))
         self.assertIsNone(layer_checks.check_is_layer_geometry_type(layer, "layer", ogr.wkbLineString25D))
