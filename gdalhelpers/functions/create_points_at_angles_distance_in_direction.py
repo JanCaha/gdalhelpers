@@ -10,11 +10,56 @@ from gdalhelpers.helpers import layer_helpers, datasource_helpers, geometry_help
 
 def create_points_at_angles_distance_in_direction(start_points: ogr.DataSource,
                                                   main_direction_point: ogr.DataSource,
-                                                  distance: Union[int, float],
+                                                  distance: Union[int, float] = 10,
                                                   angle_offset: Union[int, float] = 10,
                                                   angle_density: Union[int, float] = 1,
                                                   angles_specification_degrees: bool = True,
                                                   input_points_id_field: str = None) -> ogr.DataSource:
+    """
+    Function that generates for every `Feature` in `start_points` set of points at specified `distance` in direction of
+    `main_direction_point`.
+
+    Parameters
+    ----------
+    start_points : ogr.DataSource
+        Points to generate new points around. Can be of geometrical types: `ogr.wkbPoint, ogr.wkbPoint25D,
+        ogr.wkbPointM, ogr.wkbPointZM`.
+
+    main_direction_point : ogr.DataSource
+        Layer with single feature that specifies the direction in which the new points are generated.
+
+    distance : float or int
+        Distance at which the new points are generated. Default value is `10` and it is specified in units of layer
+        `start_points`.
+
+    angle_offset : float or int
+        Specification of angle offset on each side from `main_direction_point`. The points are generated in interval
+        `[main_angle - angle_offset, main_angle + angle_offset]`, where `main_angle` is angle between specific feature
+        of `start_points` and `main_direction_point`. Default value is `10`, which gives over angle width of `20`.
+
+    angle_density : float or int
+        How often points are generated in inverval given by `angle_offset`. Default value is `1`.
+
+    angles_specification_degrees : bool
+        Are the angles specified in degrees? Default values is `True`, if `False` the values are in radians.
+
+    input_points_id_field : str
+        Name of ID (or other) field from `input_points_ds` that should be carried over the resulting DataSource.
+
+    Returns
+    -------
+    ogr.DataSource
+        Virtual `ogr.DataSource` in memory with one layer (named `points`) containing the points.
+
+    Raises
+    ------
+    Various Errors can be raise while checking for validity of inputs.
+
+    Warns
+    -------
+    UserWarning
+        If the field of given name (`input_points_id_field`) is not present or if its not of type `ogr.OFTInteger`.
+    """
 
     output_points_ds = datasource_helpers.create_temp_gpkg_datasource()
 
@@ -62,7 +107,8 @@ def create_points_at_angles_distance_in_direction(start_points: ogr.DataSource,
 
     field_name_angle = "angle"
 
-    output_points_layer = layer_helpers.create_layer_points(output_points_ds, input_points_srs, "points")
+    layer_helpers.create_layer_points(output_points_ds, input_points_srs, "points")
+    output_points_layer = output_points_ds.GetLayer()
 
     fields = {field_name_id: ogr.OFTInteger,
               field_name_angle: ogr.OFTReal}

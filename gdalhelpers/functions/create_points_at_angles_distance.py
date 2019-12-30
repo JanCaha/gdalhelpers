@@ -1,18 +1,56 @@
 from osgeo import ogr
-from typing import List
+from typing import List, Union
 from itertools import repeat
 import os
 import math
 import warnings
+import numpy as np
 from gdalhelpers.checks import geometry_checks, layer_checks, datasource_checks, values_checks
 from gdalhelpers.helpers import layer_helpers, datasource_helpers, geometry_helpers
 
 
 def create_points_at_angles_distance(input_points_ds: ogr.DataSource,
-                                     angles: List[float],
-                                     distance: float,
+                                     angles: List[float] = np.arange(0, 360, step=1).tolist(),
+                                     distance: Union[float, int] = 1,
                                      angles_specification_degrees: bool = True,
                                      input_points_id_field: str = None) -> ogr.DataSource:
+    """
+    Function that generates for every `Feature` in `Layer` in `input_points_ds` set of points at specified `distance`
+    and `angles`.
+
+    Parameters
+    ----------
+    input_points_ds : ogr.DataSource
+        Input points, geometry of the layer has to be `ogr.wkbPoint, ogr.wkbPoint25D, ogr.wkbLineStringM` or
+        `ogr.wkbPointZM`.
+
+    angles : list of float
+        Angles at which the resulting points should be created. Default value is list containg integer values from
+        0 to 360. Create with `np.arange(0, 360, step=1).tolist()`.
+
+    distance : float or int
+        Distance at which the points should be created. Default value is `1`.
+
+    angles_specification_degrees : bool
+        Are the angles specified in degrees? Default values is `True`, if `False` the values are in radians.
+
+    input_points_id_field : str
+        Name of ID (or other) field from `input_points_ds` that should be carried over the resulting DataSource.
+
+    Returns
+    -------
+    ogr.DataSource
+        Virtual `ogr.DataSource` in memory with one layer (named `points`) containing the points.
+
+    Raises
+    ------
+    Various Errors can be raise while checking for validity of inputs.
+
+    Warns
+    -------
+    UserWarning
+        If the field of given name (`input_points_id_field`) is not present or if its not of type `ogr.OFTInteger`.
+    """
 
     output_points_ds = datasource_helpers.create_temp_gpkg_datasource()
 
@@ -38,7 +76,8 @@ def create_points_at_angles_distance(input_points_ds: ogr.DataSource,
         warnings.warn(
             "Field `{0}` does not exist in `{1}`. Defaulting to FID."
                 .format(input_points_id_field,
-                        os.path.basename(input_points_ds.GetDescription()))
+                        os.path.basename(input_points_ds.GetDescription())),
+            UserWarning
         )
     else:
         if not layer_checks.is_field_of_type(input_points_layer, input_points_id_field, ogr.OFTInteger):
@@ -46,7 +85,8 @@ def create_points_at_angles_distance(input_points_ds: ogr.DataSource,
             warnings.warn(
                 "Field `{0}` in `{1}` is not `Integer`. Defaulting to FID."
                     .format(input_points_id_field,
-                            os.path.basename(input_points_ds.GetDescription()))
+                            os.path.basename(input_points_ds.GetDescription())),
+                UserWarning
             )
 
     if input_points_id_field is None:
@@ -56,7 +96,8 @@ def create_points_at_angles_distance(input_points_ds: ogr.DataSource,
 
     field_name_angle = "angle"
 
-    output_points_layer = layer_helpers.create_layer_points(output_points_ds, input_points_srs, "points")
+    layer_helpers.create_layer_points(output_points_ds, input_points_srs, "points")
+    output_points_layer = output_points_ds.GetLayer()
 
     fields = {field_name_id: ogr.OFTInteger,
               field_name_angle: ogr.OFTReal}
