@@ -1,0 +1,403 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
+<meta name="generator" content="pdoc 0.7.2" />
+<title>gdalhelpers.functions.create_points_at_angles_distance_in_direction API documentation</title>
+<meta name="description" content="" />
+<link href='https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.0/normalize.min.css' rel='stylesheet'>
+<link href='https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/8.0.0/sanitize.min.css' rel='stylesheet'>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css" rel="stylesheet">
+<style>.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:30px;overflow:hidden}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:1em 0 .50em 0}h3{font-size:1.4em;margin:25px 0 10px 0}h4{margin:0;font-size:105%}a{color:#058;text-decoration:none;transition:color .3s ease-in-out}a:hover{color:#e82}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900}pre code{background:#f8f8f8;font-size:.8em;line-height:1.4em}code{background:#f2f2f1;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{background:#f8f8f8;border:0;border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0;padding:1ex}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{font-weight:bold}#index h4 + ul{margin-bottom:.6em}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-weight:bold;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}.admonition{padding:.1em .5em;margin-bottom:1em}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.item .name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul{padding-left:1.5em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>gdalhelpers.functions.create_points_at_angles_distance_in_direction</code></h1>
+</header>
+<section id="section-intro">
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">from osgeo import ogr
+from typing import List, Union
+import math
+import os
+import warnings
+import numpy as np
+from gdalhelpers.checks import values_checks, datasource_checks, layer_checks
+from gdalhelpers.helpers import layer_helpers, datasource_helpers, geometry_helpers
+
+
+def create_points_at_angles_distance_in_direction(start_points: ogr.DataSource,
+                                                  main_direction_point: ogr.DataSource,
+                                                  distance: Union[int, float] = 10,
+                                                  angle_offset: Union[int, float] = 10,
+                                                  angle_density: Union[int, float] = 1,
+                                                  angles_specification_degrees: bool = True,
+                                                  input_points_id_field: str = None) -&gt; ogr.DataSource:
+    &#34;&#34;&#34;
+    Function that generates for every `Feature` in `start_points` set of points at specified `distance` in direction of
+    `main_direction_point`.
+
+    Parameters
+    ----------
+    start_points : ogr.DataSource
+        Points to generate new points around. Can be of geometrical types: `ogr.wkbPoint, ogr.wkbPoint25D,
+        ogr.wkbPointM, ogr.wkbPointZM`.
+
+    main_direction_point : ogr.DataSource
+        Layer with single feature that specifies the direction in which the new points are generated.
+
+    distance : float or int
+        Distance at which the new points are generated. Default value is `10` and it is specified in units of layer
+        `start_points`.
+
+    angle_offset : float or int
+        Specification of angle offset on each side from `main_direction_point`. The points are generated in interval
+        `[main_angle - angle_offset, main_angle + angle_offset]`, where `main_angle` is angle between specific feature
+        of `start_points` and `main_direction_point`. Default value is `10`, which gives over angle width of `20`.
+
+    angle_density : float or int
+        How often points are generated in inverval given by `angle_offset`. Default value is `1`.
+
+    angles_specification_degrees : bool
+        Are the angles specified in degrees? Default values is `True`, if `False` the values are in radians.
+
+    input_points_id_field : str
+        Name of ID (or other) field from `input_points_ds` that should be carried over the resulting DataSource.
+
+    Returns
+    -------
+    ogr.DataSource
+        Virtual `ogr.DataSource` in memory with one layer (named `points`) containing the points.
+
+    Raises
+    ------
+    Various Errors can be raise while checking for validity of inputs.
+
+    Warns
+    -------
+    UserWarning
+        If the field of given name (`input_points_id_field`) is not present or if its not of type `ogr.OFTInteger`.
+    &#34;&#34;&#34;
+
+    output_points_ds = datasource_helpers.create_temp_gpkg_datasource()
+
+    datasource_checks.check_is_ogr_datasource(start_points, &#34;start_points&#34;)
+    datasource_checks.check_is_ogr_datasource(main_direction_point, &#34;main_direction_point&#34;)
+
+    values_checks.check_value_is_zero_or_positive(distance, &#34;distance&#34;)
+    values_checks.check_number(angle_offset, &#34;angle_offset&#34;)
+    values_checks.check_number(angle_density, &#34;angle_density&#34;)
+
+    if angles_specification_degrees:
+        angle_offset = ((2*math.pi)/360)*angle_offset
+        angle_density = ((2*math.pi)/360)*angle_density
+
+    input_points_layer = start_points.GetLayer()
+    layer_checks.check_is_layer_geometry_type(input_points_layer, &#34;input_points_layer&#34;, [ogr.wkbPoint, ogr.wkbPoint25D,
+                                                                                         ogr.wkbPointM, ogr.wkbPointZM])
+
+    input_points_srs = input_points_layer.GetSpatialRef()
+
+    main_point_layer = main_direction_point.GetLayer()
+    layer_checks.check_is_layer_geometry_type(main_point_layer, &#34;main_point_layer&#34;, [ogr.wkbPoint, ogr.wkbPoint25D,
+                                                                                     ogr.wkbPointM, ogr.wkbPointZM])
+    layer_checks.check_number_of_features(main_point_layer, &#34;main_point_layer&#34;, 1)
+
+    if input_points_id_field is not None:
+        if not layer_checks.does_field_exist(input_points_layer, input_points_id_field):
+            input_points_id_field = None
+            warnings.warn(
+                &#34;Field {0} does not exist in {1}. Defaulting to FID.&#34;.format(input_points_id_field,
+                                                                             os.path.basename(start_points.GetDescription()))
+            )
+        else:
+            if not layer_checks.is_field_of_type(input_points_layer, input_points_id_field, ogr.OFTInteger):
+                input_points_id_field = None
+                warnings.warn(
+                    &#34;Field {0} in {1} is not `Integer`. Defaulting to FID.&#34;.format(input_points_id_field,
+                                                                                   os.path.basename(start_points.GetDescription()))
+                )
+
+    if input_points_id_field is None:
+        field_name_id = &#34;input_point_FID&#34;
+    else:
+        field_name_id = &#34;input_point_ID&#34;
+
+    field_name_angle = &#34;angle&#34;
+
+    layer_helpers.create_layer_points(output_points_ds, input_points_srs, &#34;points&#34;)
+    output_points_layer = output_points_ds.GetLayer()
+
+    fields = {field_name_id: ogr.OFTInteger,
+              field_name_angle: ogr.OFTReal}
+
+    layer_helpers.add_fields_from_dict(output_points_layer, fields)
+
+    output_points_def = output_points_layer.GetLayerDefn()
+
+    for main_feature in main_point_layer:
+
+        main_geom = main_feature.GetGeometryRef()
+
+        for feature in input_points_layer:
+            geom = feature.GetGeometryRef()
+
+            if input_points_id_field is None:
+                f_id = feature.GetFID()
+            else:
+                f_id = feature.GetField(input_points_id_field)
+
+            main_angle = geometry_helpers.angle_points(geom, main_geom)
+
+            angles = np.arange(main_angle - angle_offset,
+                               np.nextafter(main_angle + angle_offset, np.Inf),
+                               step=angle_density)
+
+            for angle in angles:
+                p = geometry_helpers.point_at_angle_distance(geom, distance, angle)
+
+                output_point_feature = ogr.Feature(output_points_def)
+                output_point_feature.SetGeometry(p)
+
+                values = {field_name_id: f_id,
+                          field_name_angle: angle}
+
+                layer_helpers.add_values_from_dict(output_point_feature, values)
+
+                output_points_layer.CreateFeature(output_point_feature)
+
+        return output_points_ds</code></pre>
+</details>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-functions">Functions</h2>
+<dl>
+<dt id="gdalhelpers.functions.create_points_at_angles_distance_in_direction.create_points_at_angles_distance_in_direction"><code class="name flex">
+<span>def <span class="ident">create_points_at_angles_distance_in_direction</span></span>(<span>start_points, main_direction_point, distance=10, angle_offset=10, angle_density=1, angles_specification_degrees=True, input_points_id_field=None)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Function that generates for every <code>Feature</code> in <code>start_points</code> set of points at specified <code>distance</code> in direction of
+<code>main_direction_point</code>.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>start_points</code></strong> :&ensp;<code>ogr.DataSource</code></dt>
+<dd>Points to generate new points around. Can be of geometrical types: <code>ogr.wkbPoint, ogr.wkbPoint25D,
+ogr.wkbPointM, ogr.wkbPointZM</code>.</dd>
+<dt><strong><code>main_direction_point</code></strong> :&ensp;<code>ogr.DataSource</code></dt>
+<dd>Layer with single feature that specifies the direction in which the new points are generated.</dd>
+<dt><strong><code>distance</code></strong> :&ensp;<code>float</code> or <code>int</code></dt>
+<dd>Distance at which the new points are generated. Default value is <code>10</code> and it is specified in units of layer
+<code>start_points</code>.</dd>
+<dt><strong><code>angle_offset</code></strong> :&ensp;<code>float</code> or <code>int</code></dt>
+<dd>Specification of angle offset on each side from <code>main_direction_point</code>. The points are generated in interval
+<code>[main_angle - angle_offset, main_angle + angle_offset]</code>, where <code>main_angle</code> is angle between specific feature
+of <code>start_points</code> and <code>main_direction_point</code>. Default value is <code>10</code>, which gives over angle width of <code>20</code>.</dd>
+<dt><strong><code>angle_density</code></strong> :&ensp;<code>float</code> or <code>int</code></dt>
+<dd>How often points are generated in inverval given by <code>angle_offset</code>. Default value is <code>1</code>.</dd>
+<dt><strong><code>angles_specification_degrees</code></strong> :&ensp;<code>bool</code></dt>
+<dd>Are the angles specified in degrees? Default values is <code>True</code>, if <code>False</code> the values are in radians.</dd>
+<dt><strong><code>input_points_id_field</code></strong> :&ensp;<code>str</code></dt>
+<dd>Name of ID (or other) field from <code>input_points_ds</code> that should be carried over the resulting DataSource.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>ogr.DataSource</code></dt>
+<dd>Virtual <code>ogr.DataSource</code> in memory with one layer (named <code>points</code>) containing the points.</dd>
+</dl>
+<h2 id="raises">Raises</h2>
+<p>Various Errors can be raise while checking for validity of inputs.</p>
+<h2 id="warns">Warns</h2>
+<dl>
+<dt><code>UserWarning</code></dt>
+<dd>If the field of given name (<code>input_points_id_field</code>) is not present or if its not of type <code>ogr.OFTInteger</code>.</dd>
+</dl></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def create_points_at_angles_distance_in_direction(start_points: ogr.DataSource,
+                                                  main_direction_point: ogr.DataSource,
+                                                  distance: Union[int, float] = 10,
+                                                  angle_offset: Union[int, float] = 10,
+                                                  angle_density: Union[int, float] = 1,
+                                                  angles_specification_degrees: bool = True,
+                                                  input_points_id_field: str = None) -&gt; ogr.DataSource:
+    &#34;&#34;&#34;
+    Function that generates for every `Feature` in `start_points` set of points at specified `distance` in direction of
+    `main_direction_point`.
+
+    Parameters
+    ----------
+    start_points : ogr.DataSource
+        Points to generate new points around. Can be of geometrical types: `ogr.wkbPoint, ogr.wkbPoint25D,
+        ogr.wkbPointM, ogr.wkbPointZM`.
+
+    main_direction_point : ogr.DataSource
+        Layer with single feature that specifies the direction in which the new points are generated.
+
+    distance : float or int
+        Distance at which the new points are generated. Default value is `10` and it is specified in units of layer
+        `start_points`.
+
+    angle_offset : float or int
+        Specification of angle offset on each side from `main_direction_point`. The points are generated in interval
+        `[main_angle - angle_offset, main_angle + angle_offset]`, where `main_angle` is angle between specific feature
+        of `start_points` and `main_direction_point`. Default value is `10`, which gives over angle width of `20`.
+
+    angle_density : float or int
+        How often points are generated in inverval given by `angle_offset`. Default value is `1`.
+
+    angles_specification_degrees : bool
+        Are the angles specified in degrees? Default values is `True`, if `False` the values are in radians.
+
+    input_points_id_field : str
+        Name of ID (or other) field from `input_points_ds` that should be carried over the resulting DataSource.
+
+    Returns
+    -------
+    ogr.DataSource
+        Virtual `ogr.DataSource` in memory with one layer (named `points`) containing the points.
+
+    Raises
+    ------
+    Various Errors can be raise while checking for validity of inputs.
+
+    Warns
+    -------
+    UserWarning
+        If the field of given name (`input_points_id_field`) is not present or if its not of type `ogr.OFTInteger`.
+    &#34;&#34;&#34;
+
+    output_points_ds = datasource_helpers.create_temp_gpkg_datasource()
+
+    datasource_checks.check_is_ogr_datasource(start_points, &#34;start_points&#34;)
+    datasource_checks.check_is_ogr_datasource(main_direction_point, &#34;main_direction_point&#34;)
+
+    values_checks.check_value_is_zero_or_positive(distance, &#34;distance&#34;)
+    values_checks.check_number(angle_offset, &#34;angle_offset&#34;)
+    values_checks.check_number(angle_density, &#34;angle_density&#34;)
+
+    if angles_specification_degrees:
+        angle_offset = ((2*math.pi)/360)*angle_offset
+        angle_density = ((2*math.pi)/360)*angle_density
+
+    input_points_layer = start_points.GetLayer()
+    layer_checks.check_is_layer_geometry_type(input_points_layer, &#34;input_points_layer&#34;, [ogr.wkbPoint, ogr.wkbPoint25D,
+                                                                                         ogr.wkbPointM, ogr.wkbPointZM])
+
+    input_points_srs = input_points_layer.GetSpatialRef()
+
+    main_point_layer = main_direction_point.GetLayer()
+    layer_checks.check_is_layer_geometry_type(main_point_layer, &#34;main_point_layer&#34;, [ogr.wkbPoint, ogr.wkbPoint25D,
+                                                                                     ogr.wkbPointM, ogr.wkbPointZM])
+    layer_checks.check_number_of_features(main_point_layer, &#34;main_point_layer&#34;, 1)
+
+    if input_points_id_field is not None:
+        if not layer_checks.does_field_exist(input_points_layer, input_points_id_field):
+            input_points_id_field = None
+            warnings.warn(
+                &#34;Field {0} does not exist in {1}. Defaulting to FID.&#34;.format(input_points_id_field,
+                                                                             os.path.basename(start_points.GetDescription()))
+            )
+        else:
+            if not layer_checks.is_field_of_type(input_points_layer, input_points_id_field, ogr.OFTInteger):
+                input_points_id_field = None
+                warnings.warn(
+                    &#34;Field {0} in {1} is not `Integer`. Defaulting to FID.&#34;.format(input_points_id_field,
+                                                                                   os.path.basename(start_points.GetDescription()))
+                )
+
+    if input_points_id_field is None:
+        field_name_id = &#34;input_point_FID&#34;
+    else:
+        field_name_id = &#34;input_point_ID&#34;
+
+    field_name_angle = &#34;angle&#34;
+
+    layer_helpers.create_layer_points(output_points_ds, input_points_srs, &#34;points&#34;)
+    output_points_layer = output_points_ds.GetLayer()
+
+    fields = {field_name_id: ogr.OFTInteger,
+              field_name_angle: ogr.OFTReal}
+
+    layer_helpers.add_fields_from_dict(output_points_layer, fields)
+
+    output_points_def = output_points_layer.GetLayerDefn()
+
+    for main_feature in main_point_layer:
+
+        main_geom = main_feature.GetGeometryRef()
+
+        for feature in input_points_layer:
+            geom = feature.GetGeometryRef()
+
+            if input_points_id_field is None:
+                f_id = feature.GetFID()
+            else:
+                f_id = feature.GetField(input_points_id_field)
+
+            main_angle = geometry_helpers.angle_points(geom, main_geom)
+
+            angles = np.arange(main_angle - angle_offset,
+                               np.nextafter(main_angle + angle_offset, np.Inf),
+                               step=angle_density)
+
+            for angle in angles:
+                p = geometry_helpers.point_at_angle_distance(geom, distance, angle)
+
+                output_point_feature = ogr.Feature(output_points_def)
+                output_point_feature.SetGeometry(p)
+
+                values = {field_name_id: f_id,
+                          field_name_angle: angle}
+
+                layer_helpers.add_values_from_dict(output_point_feature, values)
+
+                output_points_layer.CreateFeature(output_point_feature)
+
+        return output_points_ds</code></pre>
+</details>
+</dd>
+</dl>
+</section>
+<section>
+</section>
+</article>
+<nav id="sidebar">
+<h1>Index</h1>
+<div class="toc">
+<ul></ul>
+</div>
+<ul id="index">
+<li><h3>Super-module</h3>
+<ul>
+<li><code><a title="gdalhelpers.functions" href="index.html">gdalhelpers.functions</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-functions">Functions</a></h3>
+<ul class="">
+<li><code><a title="gdalhelpers.functions.create_points_at_angles_distance_in_direction.create_points_at_angles_distance_in_direction" href="#gdalhelpers.functions.create_points_at_angles_distance_in_direction.create_points_at_angles_distance_in_direction">create_points_at_angles_distance_in_direction</a></code></li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc"><cite>pdoc</cite> 0.7.2</a>.</p>
+</footer>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+<script>hljs.initHighlightingOnLoad()</script>
+</body>
+</html>

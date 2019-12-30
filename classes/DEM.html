@@ -1,0 +1,1364 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
+<meta name="generator" content="pdoc 0.7.2" />
+<title>gdalhelpers.classes.DEM API documentation</title>
+<meta name="description" content="" />
+<link href='https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.0/normalize.min.css' rel='stylesheet'>
+<link href='https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/8.0.0/sanitize.min.css' rel='stylesheet'>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css" rel="stylesheet">
+<style>.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:30px;overflow:hidden}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:1em 0 .50em 0}h3{font-size:1.4em;margin:25px 0 10px 0}h4{margin:0;font-size:105%}a{color:#058;text-decoration:none;transition:color .3s ease-in-out}a:hover{color:#e82}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900}pre code{background:#f8f8f8;font-size:.8em;line-height:1.4em}code{background:#f2f2f1;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{background:#f8f8f8;border:0;border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0;padding:1ex}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{font-weight:bold}#index h4 + ul{margin-bottom:.6em}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-weight:bold;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}.admonition{padding:.1em .5em;margin-bottom:1em}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.item .name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul{padding-left:1.5em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>gdalhelpers.classes.DEM</code></h1>
+</header>
+<section id="section-intro">
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">import gdal
+from gdal import osr, ogr
+from typing import List, Union
+from numpy import floor, array
+import os
+import math
+import warnings
+import gdalhelpers.helpers.math_helpers as math_helpers
+from gdalhelpers.checks import geometry_checks
+
+
+class DEM:
+    &#34;&#34;&#34;
+    Class representing digital elevation model. Based on `gdal.Dataset` with additional functions.
+    Various checks are performed at creation time to ensure usability of the data. `DEM` can only have one band with
+    values and the raster has to projected.
+
+    Attributes
+    ----------
+    path : str
+        Path to the stored dataset.
+
+    ds : gdal.Dataset
+        Raster dataset in `gdal`.
+
+    projection : osr.SpatialReference
+        `osr.SpatialReference` for from `ds`.
+
+    gt
+        Result of `ds.GetGeoTransform()` function.
+
+    nx, ny : int
+        Raster size in x and y direction in cells.
+
+    no_data : float
+        Value from functions `ds.GetRasterBand(1).GetNoDataValue()`.
+
+    np_array : np.array
+        Two dimensional numpy array of values from `ds`.
+    &#34;&#34;&#34;
+
+    __band_number = 1
+    __gdal_nodata_default = -3.4028e+38
+
+    def __init__(self, path: str, epsg: int = None):
+        &#34;&#34;&#34;
+        Construct function.
+
+        Parameters
+        ----------
+        path : str
+            Path to load the data from.
+
+        epsg : int, optional
+            EPSG code of raster projection.
+        &#34;&#34;&#34;
+
+        if not os.path.isfile(path):
+            raise IOError(&#34;File at specified path `{0}` does not exist.&#34;.format(path))
+
+        self.path = path
+        self.ds = gdal.Open(self.path)
+
+        if self.ds.RasterCount &gt; 1:
+            raise ValueError(&#34;DEM is only allowed to have one band. The raster has `{}` bands.&#34;
+                             .format(self.ds.RasterCount))
+
+        projection = self.ds.GetProjection()
+        projection = osr.SpatialReference(wkt=projection)
+
+        if projection.ExportToWkt() == &#34;&#34; and epsg is None:
+            raise ValueError(&#34;Cannot obtain projection from raster `{0}` and epsg argument is not set.&#34;
+                             .format(path))
+
+        if projection != &#34;&#34; and epsg is not None:
+            epsg = None
+            warnings.warn(
+                &#34;Raster has specified projection and epsg is set. Using projection from raster!&#34;,
+                SyntaxWarning)
+
+        if epsg is None:
+
+            if projection.IsProjected() != 1:
+                raise ValueError(&#34;DEM has to be projected, the given projection is not projected: \n `{0}`.&#34;
+                                 .format(projection.ExportToWkt()))
+        else:
+
+            projection = osr.SpatialReference()
+            projection.ImportFromEPSG(epsg)
+
+            if projection.IsProjected() != 1:
+                raise ValueError(&#34;DEM has to be projected, the definition of provided EPSG is not projected: \n `{0}`.&#34;.
+                                 format(projection.ExportToProj4()))
+            else:
+                self.ds.SetProjection(projection.ExportToWkt())
+
+        self.gt = self.ds.GetGeoTransform()
+        self.nx = self.ds.RasterXSize
+        self.ny = self.ds.RasterYSize
+        self.no_data = self.ds.GetRasterBand(self.__band_number).GetNoDataValue()
+        self.np_array = None
+
+    @classmethod
+    def from_gdal_raster(cls, gdal_raster: gdal.Dataset):
+        &#34;&#34;&#34;
+        Class method to build `DEM` from `gdal.Dataset`.
+
+        Parameters
+        ----------
+        gdal_raster : gdal.Dataset
+            Build `DEM` based on allready loaded raster data.
+
+        Returns
+        -------
+        None
+        &#34;&#34;&#34;
+
+        if not isinstance(gdal_raster, gdal.Dataset):
+            raise TypeError(&#34;`gdal_raster` has to be of type `gdal.Dataset`. &#34;
+                            &#34;But it is type `{0}`&#34;.format(type(gdal_raster).__name__))
+
+        return cls(path=gdal_raster.GetDescription())
+
+    def __str__(self):
+        &#34;&#34;&#34;
+        String representation of class `DEM`.
+
+        Returns
+        -------
+        str
+            Represetation of DEM.
+        &#34;&#34;&#34;
+
+        return &#34;Raster from `{0}` with sizes(`{1}`, `{2}`) using projection `{3}`.&#34;.format(self.path,
+                                                                                           self.nx,
+                                                                                           self.ny,
+                                                                                           self.ds.GetProjection())
+
+    def __del__(self):
+        &#34;&#34;&#34;
+        Upon deletion of the object close connection and clear array.
+
+        Returns
+        -------
+        None
+        &#34;&#34;&#34;
+        self.ds = None
+        self.destroy_array()
+
+    def get_min_pixel_size(self) -&gt; float:
+        &#34;&#34;&#34;
+        Get minimal pixel size in either row or column direction.
+        
+        Returns
+        -------
+        float
+            Minimal pixel size in either row or column direction.
+        &#34;&#34;&#34;
+        return abs(min(self.gt[1], self.gt[5]))
+
+    def __check_value_is_nodata(self, value: Union[int, float]) -&gt; bool:
+        return (value &lt; self.__gdal_nodata_default) or math_helpers.is_almost_equal(value, self.no_data)
+
+    def load_array(self) -&gt; None:
+        &#34;&#34;&#34;
+        Read raster values into numpy array.
+
+        Returns
+        -------
+        None
+        &#34;&#34;&#34;
+        self.np_array = self.ds.GetRasterBand(self.__band_number).ReadAsArray()
+
+    def destroy_array(self) -&gt; None:
+        &#34;&#34;&#34;
+        Clear numpy array with raster values.
+
+        Returns
+        -------
+        None
+        &#34;&#34;&#34;
+        self.np_array = None
+
+    def get_nodata_value(self) -&gt; float:
+        &#34;&#34;&#34;
+        Get no data value of the raster.
+
+        Returns
+        -------
+        float
+            No data value of the raster.
+        &#34;&#34;&#34;
+        return self.no_data
+
+    def get_max_size(self) -&gt; float:
+        &#34;&#34;&#34;
+        Get larger size of the raster in map units. Calculated as pixel width/height times raster width/height.
+
+        Returns
+        -------
+        float
+            Maximal raster size.
+        &#34;&#34;&#34;
+        return max(self.gt[1] * self.nx, self.gt[5] * self.ny)
+
+    def get_diagonal_size(self) -&gt; float:
+        &#34;&#34;&#34;
+        Get diagonal size of the raster in map units.
+
+        Returns
+        -------
+        float
+            Raster size in diagonal direction.
+        &#34;&#34;&#34;
+        size = math.sqrt(math.pow(self.gt[1] * self.nx, 2) + math.pow(self.gt[5] * self.ny, 2))
+        return size
+
+    def get_bounding_box(self) -&gt; ogr.Geometry:
+        &#34;&#34;&#34;
+        Get bounding box of the raster.
+
+        Returns
+        -------
+        ogr.Geometry
+            Bounding box of the raster.
+        &#34;&#34;&#34;
+
+        x1 = self.gt[0]
+        x2 = self.gt[0] + self.nx * self.gt[1]
+        y1 = self.gt[3]
+        y2 = self.gt[3] + self.ny * self.gt[5]
+
+        ring = ogr.Geometry(ogr.wkbLinearRing)
+        ring.AddPoint(min(x1, x2), min(y1, y2))
+        ring.AddPoint(max(x1, x2), min(y1, y2))
+        ring.AddPoint(max(x1, x2), max(y1, y2))
+        ring.AddPoint(min(x1, x2), max(y1, y2))
+        ring.AddPoint(min(x1, x2), min(y1, y2))
+
+        bbox = ogr.Geometry(ogr.wkbPolygon)
+        bbox.AddGeometry(ring)
+
+        return bbox
+
+    # code from http://gis.stackexchange.com/questions/7611/bilinear-interpolation-of-point-data-on-a-raster-in-python
+    def get_value_bilinear(self, px: float, py: float) -&gt; float:
+        &#34;&#34;&#34;
+        Get bilinear interpolated value from the raster at point (px, py).
+
+        Parameters
+        ----------
+        px, py : float
+            Point coordinates in raster units.
+
+        Returns
+        -------
+        float
+            Interpolated value of the raster at specified location.
+        &#34;&#34;&#34;
+
+        if not isinstance(px, (int, float)):
+            raise TypeError(&#34;px must be number. The variable is of `{}`.&#34;.format(type(px)))
+
+        if not isinstance(py, (int, float)):
+            raise TypeError(&#34;py must be number. The variable is of `{}`.&#34;.format(type(py)))
+
+        if self.np_array is None:
+            self.load_array()
+
+        ny, nx = self.np_array.shape
+        # Half raster cell widths
+        hx = self.gt[1] / 2.0
+        hy = self.gt[5] / 2.0
+        # Calculate raster lower bound indices from point
+        fx = (px - (self.gt[0] + hx)) / self.gt[1]
+        fy = (py - (self.gt[3] + hy)) / self.gt[5]
+
+        ix1 = int(floor(fx))
+        iy1 = int(floor(fy))
+        # Special case where point is on upper bounds
+        if fx == float(nx - 1):
+            ix1 -= 1
+        if fy == float(ny - 1):
+            iy1 -= 1
+        # Upper bound indices on raster
+        ix2 = ix1 + 1
+        iy2 = iy1 + 1
+        # Test array bounds to ensure point is within raster midpoints
+        if (ix1 &lt; 0) or (iy1 &lt; 0) or (ix2 &gt; nx - 1) or (iy2 &gt; ny - 1):
+            return self.no_data
+        # Calculate differences from point to bounding raster midpoints
+        dx1 = px - (self.gt[0] + ix1 * self.gt[1] + hx)
+        dy1 = py - (self.gt[3] + iy1 * self.gt[5] + hy)
+
+        dx2 = (self.gt[0] + ix2 * self.gt[1] + hx) - px
+        dy2 = (self.gt[3] + iy2 * self.gt[5] + hy) - py
+        # Use the differences to weigh the four raster values
+        div = self.gt[1] * self.gt[5]
+
+        # if any value is nodata then everything is nodata
+        if (self.__check_value_is_nodata(self.np_array[iy1, ix1]) or
+                self.__check_value_is_nodata(self.np_array[iy1, ix2]) or
+                self.__check_value_is_nodata(self.np_array[iy2, ix1]) or
+                self.__check_value_is_nodata(self.np_array[iy2, ix2])):
+
+            return self.no_data
+
+        return ((self.np_array[iy1, ix1] * dx2 * dy2) / div +
+                (self.np_array[iy1, ix2] * dx1 * dy2) / div +
+                (self.np_array[iy2, ix1] * dx2 * dy1) / div +
+                (self.np_array[iy2, ix2] * dx1 * dy1) / div)
+
+    def get_values_bilinear(self, positions: List[List[float]]) -&gt; List[float]:
+        &#34;&#34;&#34;
+        The same function as `get_value_bilinear()` on vectorized for list definition of locations.
+
+        Parameters
+        ----------
+        positions : list of list of float
+            Position for interpolation of raster values. The format should be
+            `positions=[[px1,py1],[px2,py2],[px3,py3]]`.
+
+        Returns
+        -------
+        list of float
+            For every element of list of `positions` one element in list.
+
+        Raises
+        ------
+        ValueError
+            If element of positions is not list with `len() == 2`.
+
+        See Also
+        --------
+        get_value_bilinear : Get value bilinear
+        &#34;&#34;&#34;
+
+        values: list = [None] * len(positions)
+        i: int = 0
+
+        for position in positions:
+
+            if len(position) != 2:
+                pos_str = [str(x) for x in position]
+                raise ValueError(&#34;Every element of list of positions must be of length `2`. &#34;
+                                 &#34;Element `{0}`, has `{1}` elements (values: `{2}`)&#34;.format(i,
+                                                                                            len(position),
+                                                                                            &#34;, &#34;.join(pos_str)))
+            values[i] = self.get_value_bilinear(position[0], position[1])
+            i += 1
+
+        return values
+
+    def get_values_points_bilinear(self, points: List[ogr.Geometry]) -&gt; List[float]:
+        &#34;&#34;&#34;
+        The same function as `get_values_bilinear()` but with different parameter.
+
+        Parameters
+        ----------
+        points : list of ogr.Geometry
+            List of `ogr.Geometry` points (`ogr.wkbPoint, ogr.wkbPoint25D, gr.wkbPointM, ogr.wkbPointZM`) to get raster
+            value at.
+
+        Returns
+        -------
+        list of float
+            For every element of list of `points` one element in list.
+
+        Raises
+        ------
+        ValueError
+            If element of `points` is not `ogr.Geometry` with type `ogr.wkbPoint, ogr.wkbPoint25D, gr.wkbPointM or
+             ogr.wkbPointZM`.
+
+        See Also
+        --------
+        get_value_bilinear : Get value bilinear
+        get_values_bilinear : Get values bilinear
+        &#34;&#34;&#34;
+        values: list = [None] * len(points)
+        i: int = 0
+
+        for p in points:
+            geometry_checks.check_variable_expected_geometry(p, &#34;point[{}]&#34;.format(i), [ogr.wkbPoint, ogr.wkbPoint25D,
+                                                                                        ogr.wkbPointM, ogr.wkbPointZM])
+
+            values[i] = self.get_value_bilinear(p.GetX(), p.GetY())
+            i += 1
+
+        return values</code></pre>
+</details>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-classes">Classes</h2>
+<dl>
+<dt id="gdalhelpers.classes.DEM.DEM"><code class="flex name class">
+<span>class <span class="ident">DEM</span></span>
+<span>(</span><span>path, epsg=None)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Class representing digital elevation model. Based on <code>gdal.Dataset</code> with additional functions.
+Various checks are performed at creation time to ensure usability of the data. <a title="gdalhelpers.classes.DEM.DEM" href="#gdalhelpers.classes.DEM.DEM"><code>DEM</code></a> can only have one band with
+values and the raster has to projected.</p>
+<h2 id="attributes">Attributes</h2>
+<dl>
+<dt><strong><code>path</code></strong> :&ensp;<code>str</code></dt>
+<dd>Path to the stored dataset.</dd>
+<dt><strong><code>ds</code></strong> :&ensp;<code>gdal.Dataset</code></dt>
+<dd>Raster dataset in <code>gdal</code>.</dd>
+<dt><strong><code>projection</code></strong> :&ensp;<code>osr.SpatialReference</code></dt>
+<dd><code>osr.SpatialReference</code> for from <code>ds</code>.</dd>
+<dt><strong><code>gt</code></strong></dt>
+<dd>Result of <code>ds.GetGeoTransform()</code> function.</dd>
+<dt><strong><code>nx</code></strong>, <strong><code>ny</code></strong> :&ensp;<code>int</code></dt>
+<dd>Raster size in x and y direction in cells.</dd>
+<dt><strong><code>no_data</code></strong> :&ensp;<code>float</code></dt>
+<dd>Value from functions <code>ds.GetRasterBand(1).GetNoDataValue()</code>.</dd>
+<dt><strong><code>np_array</code></strong> :&ensp;<code>np.array</code></dt>
+<dd>Two dimensional numpy array of values from <code>ds</code>.</dd>
+</dl>
+<p>Construct function.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>path</code></strong> :&ensp;<code>str</code></dt>
+<dd>Path to load the data from.</dd>
+<dt><strong><code>epsg</code></strong> :&ensp;<code>int</code>, optional</dt>
+<dd>EPSG code of raster projection.</dd>
+</dl></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class DEM:
+    &#34;&#34;&#34;
+    Class representing digital elevation model. Based on `gdal.Dataset` with additional functions.
+    Various checks are performed at creation time to ensure usability of the data. `DEM` can only have one band with
+    values and the raster has to projected.
+
+    Attributes
+    ----------
+    path : str
+        Path to the stored dataset.
+
+    ds : gdal.Dataset
+        Raster dataset in `gdal`.
+
+    projection : osr.SpatialReference
+        `osr.SpatialReference` for from `ds`.
+
+    gt
+        Result of `ds.GetGeoTransform()` function.
+
+    nx, ny : int
+        Raster size in x and y direction in cells.
+
+    no_data : float
+        Value from functions `ds.GetRasterBand(1).GetNoDataValue()`.
+
+    np_array : np.array
+        Two dimensional numpy array of values from `ds`.
+    &#34;&#34;&#34;
+
+    __band_number = 1
+    __gdal_nodata_default = -3.4028e+38
+
+    def __init__(self, path: str, epsg: int = None):
+        &#34;&#34;&#34;
+        Construct function.
+
+        Parameters
+        ----------
+        path : str
+            Path to load the data from.
+
+        epsg : int, optional
+            EPSG code of raster projection.
+        &#34;&#34;&#34;
+
+        if not os.path.isfile(path):
+            raise IOError(&#34;File at specified path `{0}` does not exist.&#34;.format(path))
+
+        self.path = path
+        self.ds = gdal.Open(self.path)
+
+        if self.ds.RasterCount &gt; 1:
+            raise ValueError(&#34;DEM is only allowed to have one band. The raster has `{}` bands.&#34;
+                             .format(self.ds.RasterCount))
+
+        projection = self.ds.GetProjection()
+        projection = osr.SpatialReference(wkt=projection)
+
+        if projection.ExportToWkt() == &#34;&#34; and epsg is None:
+            raise ValueError(&#34;Cannot obtain projection from raster `{0}` and epsg argument is not set.&#34;
+                             .format(path))
+
+        if projection != &#34;&#34; and epsg is not None:
+            epsg = None
+            warnings.warn(
+                &#34;Raster has specified projection and epsg is set. Using projection from raster!&#34;,
+                SyntaxWarning)
+
+        if epsg is None:
+
+            if projection.IsProjected() != 1:
+                raise ValueError(&#34;DEM has to be projected, the given projection is not projected: \n `{0}`.&#34;
+                                 .format(projection.ExportToWkt()))
+        else:
+
+            projection = osr.SpatialReference()
+            projection.ImportFromEPSG(epsg)
+
+            if projection.IsProjected() != 1:
+                raise ValueError(&#34;DEM has to be projected, the definition of provided EPSG is not projected: \n `{0}`.&#34;.
+                                 format(projection.ExportToProj4()))
+            else:
+                self.ds.SetProjection(projection.ExportToWkt())
+
+        self.gt = self.ds.GetGeoTransform()
+        self.nx = self.ds.RasterXSize
+        self.ny = self.ds.RasterYSize
+        self.no_data = self.ds.GetRasterBand(self.__band_number).GetNoDataValue()
+        self.np_array = None
+
+    @classmethod
+    def from_gdal_raster(cls, gdal_raster: gdal.Dataset):
+        &#34;&#34;&#34;
+        Class method to build `DEM` from `gdal.Dataset`.
+
+        Parameters
+        ----------
+        gdal_raster : gdal.Dataset
+            Build `DEM` based on allready loaded raster data.
+
+        Returns
+        -------
+        None
+        &#34;&#34;&#34;
+
+        if not isinstance(gdal_raster, gdal.Dataset):
+            raise TypeError(&#34;`gdal_raster` has to be of type `gdal.Dataset`. &#34;
+                            &#34;But it is type `{0}`&#34;.format(type(gdal_raster).__name__))
+
+        return cls(path=gdal_raster.GetDescription())
+
+    def __str__(self):
+        &#34;&#34;&#34;
+        String representation of class `DEM`.
+
+        Returns
+        -------
+        str
+            Represetation of DEM.
+        &#34;&#34;&#34;
+
+        return &#34;Raster from `{0}` with sizes(`{1}`, `{2}`) using projection `{3}`.&#34;.format(self.path,
+                                                                                           self.nx,
+                                                                                           self.ny,
+                                                                                           self.ds.GetProjection())
+
+    def __del__(self):
+        &#34;&#34;&#34;
+        Upon deletion of the object close connection and clear array.
+
+        Returns
+        -------
+        None
+        &#34;&#34;&#34;
+        self.ds = None
+        self.destroy_array()
+
+    def get_min_pixel_size(self) -&gt; float:
+        &#34;&#34;&#34;
+        Get minimal pixel size in either row or column direction.
+        
+        Returns
+        -------
+        float
+            Minimal pixel size in either row or column direction.
+        &#34;&#34;&#34;
+        return abs(min(self.gt[1], self.gt[5]))
+
+    def __check_value_is_nodata(self, value: Union[int, float]) -&gt; bool:
+        return (value &lt; self.__gdal_nodata_default) or math_helpers.is_almost_equal(value, self.no_data)
+
+    def load_array(self) -&gt; None:
+        &#34;&#34;&#34;
+        Read raster values into numpy array.
+
+        Returns
+        -------
+        None
+        &#34;&#34;&#34;
+        self.np_array = self.ds.GetRasterBand(self.__band_number).ReadAsArray()
+
+    def destroy_array(self) -&gt; None:
+        &#34;&#34;&#34;
+        Clear numpy array with raster values.
+
+        Returns
+        -------
+        None
+        &#34;&#34;&#34;
+        self.np_array = None
+
+    def get_nodata_value(self) -&gt; float:
+        &#34;&#34;&#34;
+        Get no data value of the raster.
+
+        Returns
+        -------
+        float
+            No data value of the raster.
+        &#34;&#34;&#34;
+        return self.no_data
+
+    def get_max_size(self) -&gt; float:
+        &#34;&#34;&#34;
+        Get larger size of the raster in map units. Calculated as pixel width/height times raster width/height.
+
+        Returns
+        -------
+        float
+            Maximal raster size.
+        &#34;&#34;&#34;
+        return max(self.gt[1] * self.nx, self.gt[5] * self.ny)
+
+    def get_diagonal_size(self) -&gt; float:
+        &#34;&#34;&#34;
+        Get diagonal size of the raster in map units.
+
+        Returns
+        -------
+        float
+            Raster size in diagonal direction.
+        &#34;&#34;&#34;
+        size = math.sqrt(math.pow(self.gt[1] * self.nx, 2) + math.pow(self.gt[5] * self.ny, 2))
+        return size
+
+    def get_bounding_box(self) -&gt; ogr.Geometry:
+        &#34;&#34;&#34;
+        Get bounding box of the raster.
+
+        Returns
+        -------
+        ogr.Geometry
+            Bounding box of the raster.
+        &#34;&#34;&#34;
+
+        x1 = self.gt[0]
+        x2 = self.gt[0] + self.nx * self.gt[1]
+        y1 = self.gt[3]
+        y2 = self.gt[3] + self.ny * self.gt[5]
+
+        ring = ogr.Geometry(ogr.wkbLinearRing)
+        ring.AddPoint(min(x1, x2), min(y1, y2))
+        ring.AddPoint(max(x1, x2), min(y1, y2))
+        ring.AddPoint(max(x1, x2), max(y1, y2))
+        ring.AddPoint(min(x1, x2), max(y1, y2))
+        ring.AddPoint(min(x1, x2), min(y1, y2))
+
+        bbox = ogr.Geometry(ogr.wkbPolygon)
+        bbox.AddGeometry(ring)
+
+        return bbox
+
+    # code from http://gis.stackexchange.com/questions/7611/bilinear-interpolation-of-point-data-on-a-raster-in-python
+    def get_value_bilinear(self, px: float, py: float) -&gt; float:
+        &#34;&#34;&#34;
+        Get bilinear interpolated value from the raster at point (px, py).
+
+        Parameters
+        ----------
+        px, py : float
+            Point coordinates in raster units.
+
+        Returns
+        -------
+        float
+            Interpolated value of the raster at specified location.
+        &#34;&#34;&#34;
+
+        if not isinstance(px, (int, float)):
+            raise TypeError(&#34;px must be number. The variable is of `{}`.&#34;.format(type(px)))
+
+        if not isinstance(py, (int, float)):
+            raise TypeError(&#34;py must be number. The variable is of `{}`.&#34;.format(type(py)))
+
+        if self.np_array is None:
+            self.load_array()
+
+        ny, nx = self.np_array.shape
+        # Half raster cell widths
+        hx = self.gt[1] / 2.0
+        hy = self.gt[5] / 2.0
+        # Calculate raster lower bound indices from point
+        fx = (px - (self.gt[0] + hx)) / self.gt[1]
+        fy = (py - (self.gt[3] + hy)) / self.gt[5]
+
+        ix1 = int(floor(fx))
+        iy1 = int(floor(fy))
+        # Special case where point is on upper bounds
+        if fx == float(nx - 1):
+            ix1 -= 1
+        if fy == float(ny - 1):
+            iy1 -= 1
+        # Upper bound indices on raster
+        ix2 = ix1 + 1
+        iy2 = iy1 + 1
+        # Test array bounds to ensure point is within raster midpoints
+        if (ix1 &lt; 0) or (iy1 &lt; 0) or (ix2 &gt; nx - 1) or (iy2 &gt; ny - 1):
+            return self.no_data
+        # Calculate differences from point to bounding raster midpoints
+        dx1 = px - (self.gt[0] + ix1 * self.gt[1] + hx)
+        dy1 = py - (self.gt[3] + iy1 * self.gt[5] + hy)
+
+        dx2 = (self.gt[0] + ix2 * self.gt[1] + hx) - px
+        dy2 = (self.gt[3] + iy2 * self.gt[5] + hy) - py
+        # Use the differences to weigh the four raster values
+        div = self.gt[1] * self.gt[5]
+
+        # if any value is nodata then everything is nodata
+        if (self.__check_value_is_nodata(self.np_array[iy1, ix1]) or
+                self.__check_value_is_nodata(self.np_array[iy1, ix2]) or
+                self.__check_value_is_nodata(self.np_array[iy2, ix1]) or
+                self.__check_value_is_nodata(self.np_array[iy2, ix2])):
+
+            return self.no_data
+
+        return ((self.np_array[iy1, ix1] * dx2 * dy2) / div +
+                (self.np_array[iy1, ix2] * dx1 * dy2) / div +
+                (self.np_array[iy2, ix1] * dx2 * dy1) / div +
+                (self.np_array[iy2, ix2] * dx1 * dy1) / div)
+
+    def get_values_bilinear(self, positions: List[List[float]]) -&gt; List[float]:
+        &#34;&#34;&#34;
+        The same function as `get_value_bilinear()` on vectorized for list definition of locations.
+
+        Parameters
+        ----------
+        positions : list of list of float
+            Position for interpolation of raster values. The format should be
+            `positions=[[px1,py1],[px2,py2],[px3,py3]]`.
+
+        Returns
+        -------
+        list of float
+            For every element of list of `positions` one element in list.
+
+        Raises
+        ------
+        ValueError
+            If element of positions is not list with `len() == 2`.
+
+        See Also
+        --------
+        get_value_bilinear : Get value bilinear
+        &#34;&#34;&#34;
+
+        values: list = [None] * len(positions)
+        i: int = 0
+
+        for position in positions:
+
+            if len(position) != 2:
+                pos_str = [str(x) for x in position]
+                raise ValueError(&#34;Every element of list of positions must be of length `2`. &#34;
+                                 &#34;Element `{0}`, has `{1}` elements (values: `{2}`)&#34;.format(i,
+                                                                                            len(position),
+                                                                                            &#34;, &#34;.join(pos_str)))
+            values[i] = self.get_value_bilinear(position[0], position[1])
+            i += 1
+
+        return values
+
+    def get_values_points_bilinear(self, points: List[ogr.Geometry]) -&gt; List[float]:
+        &#34;&#34;&#34;
+        The same function as `get_values_bilinear()` but with different parameter.
+
+        Parameters
+        ----------
+        points : list of ogr.Geometry
+            List of `ogr.Geometry` points (`ogr.wkbPoint, ogr.wkbPoint25D, gr.wkbPointM, ogr.wkbPointZM`) to get raster
+            value at.
+
+        Returns
+        -------
+        list of float
+            For every element of list of `points` one element in list.
+
+        Raises
+        ------
+        ValueError
+            If element of `points` is not `ogr.Geometry` with type `ogr.wkbPoint, ogr.wkbPoint25D, gr.wkbPointM or
+             ogr.wkbPointZM`.
+
+        See Also
+        --------
+        get_value_bilinear : Get value bilinear
+        get_values_bilinear : Get values bilinear
+        &#34;&#34;&#34;
+        values: list = [None] * len(points)
+        i: int = 0
+
+        for p in points:
+            geometry_checks.check_variable_expected_geometry(p, &#34;point[{}]&#34;.format(i), [ogr.wkbPoint, ogr.wkbPoint25D,
+                                                                                        ogr.wkbPointM, ogr.wkbPointZM])
+
+            values[i] = self.get_value_bilinear(p.GetX(), p.GetY())
+            i += 1
+
+        return values</code></pre>
+</details>
+<h3>Static methods</h3>
+<dl>
+<dt id="gdalhelpers.classes.DEM.DEM.from_gdal_raster"><code class="name flex">
+<span>def <span class="ident">from_gdal_raster</span></span>(<span>gdal_raster)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Class method to build <a title="gdalhelpers.classes.DEM.DEM" href="#gdalhelpers.classes.DEM.DEM"><code>DEM</code></a> from <code>gdal.Dataset</code>.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>gdal_raster</code></strong> :&ensp;<code>gdal.Dataset</code></dt>
+<dd>Build <a title="gdalhelpers.classes.DEM.DEM" href="#gdalhelpers.classes.DEM.DEM"><code>DEM</code></a> based on allready loaded raster data.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>None</code></dt>
+<dd>&nbsp;</dd>
+</dl></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@classmethod
+def from_gdal_raster(cls, gdal_raster: gdal.Dataset):
+    &#34;&#34;&#34;
+    Class method to build `DEM` from `gdal.Dataset`.
+
+    Parameters
+    ----------
+    gdal_raster : gdal.Dataset
+        Build `DEM` based on allready loaded raster data.
+
+    Returns
+    -------
+    None
+    &#34;&#34;&#34;
+
+    if not isinstance(gdal_raster, gdal.Dataset):
+        raise TypeError(&#34;`gdal_raster` has to be of type `gdal.Dataset`. &#34;
+                        &#34;But it is type `{0}`&#34;.format(type(gdal_raster).__name__))
+
+    return cls(path=gdal_raster.GetDescription())</code></pre>
+</details>
+</dd>
+</dl>
+<h3>Methods</h3>
+<dl>
+<dt id="gdalhelpers.classes.DEM.DEM.destroy_array"><code class="name flex">
+<span>def <span class="ident">destroy_array</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Clear numpy array with raster values.</p>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>None</code></dt>
+<dd>&nbsp;</dd>
+</dl></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def destroy_array(self) -&gt; None:
+    &#34;&#34;&#34;
+    Clear numpy array with raster values.
+
+    Returns
+    -------
+    None
+    &#34;&#34;&#34;
+    self.np_array = None</code></pre>
+</details>
+</dd>
+<dt id="gdalhelpers.classes.DEM.DEM.get_bounding_box"><code class="name flex">
+<span>def <span class="ident">get_bounding_box</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Get bounding box of the raster.</p>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>ogr.Geometry</code></dt>
+<dd>Bounding box of the raster.</dd>
+</dl></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_bounding_box(self) -&gt; ogr.Geometry:
+    &#34;&#34;&#34;
+    Get bounding box of the raster.
+
+    Returns
+    -------
+    ogr.Geometry
+        Bounding box of the raster.
+    &#34;&#34;&#34;
+
+    x1 = self.gt[0]
+    x2 = self.gt[0] + self.nx * self.gt[1]
+    y1 = self.gt[3]
+    y2 = self.gt[3] + self.ny * self.gt[5]
+
+    ring = ogr.Geometry(ogr.wkbLinearRing)
+    ring.AddPoint(min(x1, x2), min(y1, y2))
+    ring.AddPoint(max(x1, x2), min(y1, y2))
+    ring.AddPoint(max(x1, x2), max(y1, y2))
+    ring.AddPoint(min(x1, x2), max(y1, y2))
+    ring.AddPoint(min(x1, x2), min(y1, y2))
+
+    bbox = ogr.Geometry(ogr.wkbPolygon)
+    bbox.AddGeometry(ring)
+
+    return bbox</code></pre>
+</details>
+</dd>
+<dt id="gdalhelpers.classes.DEM.DEM.get_diagonal_size"><code class="name flex">
+<span>def <span class="ident">get_diagonal_size</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Get diagonal size of the raster in map units.</p>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>float</code></dt>
+<dd>Raster size in diagonal direction.</dd>
+</dl></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_diagonal_size(self) -&gt; float:
+    &#34;&#34;&#34;
+    Get diagonal size of the raster in map units.
+
+    Returns
+    -------
+    float
+        Raster size in diagonal direction.
+    &#34;&#34;&#34;
+    size = math.sqrt(math.pow(self.gt[1] * self.nx, 2) + math.pow(self.gt[5] * self.ny, 2))
+    return size</code></pre>
+</details>
+</dd>
+<dt id="gdalhelpers.classes.DEM.DEM.get_max_size"><code class="name flex">
+<span>def <span class="ident">get_max_size</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Get larger size of the raster in map units. Calculated as pixel width/height times raster width/height.</p>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>float</code></dt>
+<dd>Maximal raster size.</dd>
+</dl></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_max_size(self) -&gt; float:
+    &#34;&#34;&#34;
+    Get larger size of the raster in map units. Calculated as pixel width/height times raster width/height.
+
+    Returns
+    -------
+    float
+        Maximal raster size.
+    &#34;&#34;&#34;
+    return max(self.gt[1] * self.nx, self.gt[5] * self.ny)</code></pre>
+</details>
+</dd>
+<dt id="gdalhelpers.classes.DEM.DEM.get_min_pixel_size"><code class="name flex">
+<span>def <span class="ident">get_min_pixel_size</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Get minimal pixel size in either row or column direction.</p>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>float</code></dt>
+<dd>Minimal pixel size in either row or column direction.</dd>
+</dl></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_min_pixel_size(self) -&gt; float:
+    &#34;&#34;&#34;
+    Get minimal pixel size in either row or column direction.
+    
+    Returns
+    -------
+    float
+        Minimal pixel size in either row or column direction.
+    &#34;&#34;&#34;
+    return abs(min(self.gt[1], self.gt[5]))</code></pre>
+</details>
+</dd>
+<dt id="gdalhelpers.classes.DEM.DEM.get_nodata_value"><code class="name flex">
+<span>def <span class="ident">get_nodata_value</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Get no data value of the raster.</p>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>float</code></dt>
+<dd>No data value of the raster.</dd>
+</dl></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_nodata_value(self) -&gt; float:
+    &#34;&#34;&#34;
+    Get no data value of the raster.
+
+    Returns
+    -------
+    float
+        No data value of the raster.
+    &#34;&#34;&#34;
+    return self.no_data</code></pre>
+</details>
+</dd>
+<dt id="gdalhelpers.classes.DEM.DEM.get_value_bilinear"><code class="name flex">
+<span>def <span class="ident">get_value_bilinear</span></span>(<span>self, px, py)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Get bilinear interpolated value from the raster at point (px, py).</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>px</code></strong>, <strong><code>py</code></strong> :&ensp;<code>float</code></dt>
+<dd>Point coordinates in raster units.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>float</code></dt>
+<dd>Interpolated value of the raster at specified location.</dd>
+</dl></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_value_bilinear(self, px: float, py: float) -&gt; float:
+    &#34;&#34;&#34;
+    Get bilinear interpolated value from the raster at point (px, py).
+
+    Parameters
+    ----------
+    px, py : float
+        Point coordinates in raster units.
+
+    Returns
+    -------
+    float
+        Interpolated value of the raster at specified location.
+    &#34;&#34;&#34;
+
+    if not isinstance(px, (int, float)):
+        raise TypeError(&#34;px must be number. The variable is of `{}`.&#34;.format(type(px)))
+
+    if not isinstance(py, (int, float)):
+        raise TypeError(&#34;py must be number. The variable is of `{}`.&#34;.format(type(py)))
+
+    if self.np_array is None:
+        self.load_array()
+
+    ny, nx = self.np_array.shape
+    # Half raster cell widths
+    hx = self.gt[1] / 2.0
+    hy = self.gt[5] / 2.0
+    # Calculate raster lower bound indices from point
+    fx = (px - (self.gt[0] + hx)) / self.gt[1]
+    fy = (py - (self.gt[3] + hy)) / self.gt[5]
+
+    ix1 = int(floor(fx))
+    iy1 = int(floor(fy))
+    # Special case where point is on upper bounds
+    if fx == float(nx - 1):
+        ix1 -= 1
+    if fy == float(ny - 1):
+        iy1 -= 1
+    # Upper bound indices on raster
+    ix2 = ix1 + 1
+    iy2 = iy1 + 1
+    # Test array bounds to ensure point is within raster midpoints
+    if (ix1 &lt; 0) or (iy1 &lt; 0) or (ix2 &gt; nx - 1) or (iy2 &gt; ny - 1):
+        return self.no_data
+    # Calculate differences from point to bounding raster midpoints
+    dx1 = px - (self.gt[0] + ix1 * self.gt[1] + hx)
+    dy1 = py - (self.gt[3] + iy1 * self.gt[5] + hy)
+
+    dx2 = (self.gt[0] + ix2 * self.gt[1] + hx) - px
+    dy2 = (self.gt[3] + iy2 * self.gt[5] + hy) - py
+    # Use the differences to weigh the four raster values
+    div = self.gt[1] * self.gt[5]
+
+    # if any value is nodata then everything is nodata
+    if (self.__check_value_is_nodata(self.np_array[iy1, ix1]) or
+            self.__check_value_is_nodata(self.np_array[iy1, ix2]) or
+            self.__check_value_is_nodata(self.np_array[iy2, ix1]) or
+            self.__check_value_is_nodata(self.np_array[iy2, ix2])):
+
+        return self.no_data
+
+    return ((self.np_array[iy1, ix1] * dx2 * dy2) / div +
+            (self.np_array[iy1, ix2] * dx1 * dy2) / div +
+            (self.np_array[iy2, ix1] * dx2 * dy1) / div +
+            (self.np_array[iy2, ix2] * dx1 * dy1) / div)</code></pre>
+</details>
+</dd>
+<dt id="gdalhelpers.classes.DEM.DEM.get_values_bilinear"><code class="name flex">
+<span>def <span class="ident">get_values_bilinear</span></span>(<span>self, positions)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>The same function as <code>get_value_bilinear()</code> on vectorized for list definition of locations.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>positions</code></strong> :&ensp;<code>list</code> of <code>list</code> of <code>float</code></dt>
+<dd>Position for interpolation of raster values. The format should be
+<code>positions=[[px1,py1],[px2,py2],[px3,py3]]</code>.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>list</code> of <code>float</code></dt>
+<dd>For every element of list of <code>positions</code> one element in list.</dd>
+</dl>
+<h2 id="raises">Raises</h2>
+<dl>
+<dt><code>ValueError</code></dt>
+<dd>If element of positions is not list with <code>len() == 2</code>.</dd>
+</dl>
+<h2 id="see-also">See Also</h2>
+<dl>
+<dt><code>get_value_bilinear</code></dt>
+<dd>Get value bilinear</dd>
+</dl></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_values_bilinear(self, positions: List[List[float]]) -&gt; List[float]:
+    &#34;&#34;&#34;
+    The same function as `get_value_bilinear()` on vectorized for list definition of locations.
+
+    Parameters
+    ----------
+    positions : list of list of float
+        Position for interpolation of raster values. The format should be
+        `positions=[[px1,py1],[px2,py2],[px3,py3]]`.
+
+    Returns
+    -------
+    list of float
+        For every element of list of `positions` one element in list.
+
+    Raises
+    ------
+    ValueError
+        If element of positions is not list with `len() == 2`.
+
+    See Also
+    --------
+    get_value_bilinear : Get value bilinear
+    &#34;&#34;&#34;
+
+    values: list = [None] * len(positions)
+    i: int = 0
+
+    for position in positions:
+
+        if len(position) != 2:
+            pos_str = [str(x) for x in position]
+            raise ValueError(&#34;Every element of list of positions must be of length `2`. &#34;
+                             &#34;Element `{0}`, has `{1}` elements (values: `{2}`)&#34;.format(i,
+                                                                                        len(position),
+                                                                                        &#34;, &#34;.join(pos_str)))
+        values[i] = self.get_value_bilinear(position[0], position[1])
+        i += 1
+
+    return values</code></pre>
+</details>
+</dd>
+<dt id="gdalhelpers.classes.DEM.DEM.get_values_points_bilinear"><code class="name flex">
+<span>def <span class="ident">get_values_points_bilinear</span></span>(<span>self, points)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>The same function as <code>get_values_bilinear()</code> but with different parameter.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>points</code></strong> :&ensp;<code>list</code> of <code>ogr.Geometry</code></dt>
+<dd>List of <code>ogr.Geometry</code> points (<code>ogr.wkbPoint, ogr.wkbPoint25D, gr.wkbPointM, ogr.wkbPointZM</code>) to get raster
+value at.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>list</code> of <code>float</code></dt>
+<dd>For every element of list of <code>points</code> one element in list.</dd>
+</dl>
+<h2 id="raises">Raises</h2>
+<dl>
+<dt><code>ValueError</code></dt>
+<dd>If element of <code>points</code> is not <code>ogr.Geometry</code> with type <code>ogr.wkbPoint, ogr.wkbPoint25D, gr.wkbPointM or
+ogr.wkbPointZM</code>.</dd>
+</dl>
+<h2 id="see-also">See Also</h2>
+<dl>
+<dt><code>get_value_bilinear</code></dt>
+<dd>Get value bilinear</dd>
+<dt><code>get_values_bilinear</code></dt>
+<dd>Get values bilinear</dd>
+</dl></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_values_points_bilinear(self, points: List[ogr.Geometry]) -&gt; List[float]:
+    &#34;&#34;&#34;
+    The same function as `get_values_bilinear()` but with different parameter.
+
+    Parameters
+    ----------
+    points : list of ogr.Geometry
+        List of `ogr.Geometry` points (`ogr.wkbPoint, ogr.wkbPoint25D, gr.wkbPointM, ogr.wkbPointZM`) to get raster
+        value at.
+
+    Returns
+    -------
+    list of float
+        For every element of list of `points` one element in list.
+
+    Raises
+    ------
+    ValueError
+        If element of `points` is not `ogr.Geometry` with type `ogr.wkbPoint, ogr.wkbPoint25D, gr.wkbPointM or
+         ogr.wkbPointZM`.
+
+    See Also
+    --------
+    get_value_bilinear : Get value bilinear
+    get_values_bilinear : Get values bilinear
+    &#34;&#34;&#34;
+    values: list = [None] * len(points)
+    i: int = 0
+
+    for p in points:
+        geometry_checks.check_variable_expected_geometry(p, &#34;point[{}]&#34;.format(i), [ogr.wkbPoint, ogr.wkbPoint25D,
+                                                                                    ogr.wkbPointM, ogr.wkbPointZM])
+
+        values[i] = self.get_value_bilinear(p.GetX(), p.GetY())
+        i += 1
+
+    return values</code></pre>
+</details>
+</dd>
+<dt id="gdalhelpers.classes.DEM.DEM.load_array"><code class="name flex">
+<span>def <span class="ident">load_array</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Read raster values into numpy array.</p>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>None</code></dt>
+<dd>&nbsp;</dd>
+</dl></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def load_array(self) -&gt; None:
+    &#34;&#34;&#34;
+    Read raster values into numpy array.
+
+    Returns
+    -------
+    None
+    &#34;&#34;&#34;
+    self.np_array = self.ds.GetRasterBand(self.__band_number).ReadAsArray()</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+</dl>
+</section>
+</article>
+<nav id="sidebar">
+<h1>Index</h1>
+<div class="toc">
+<ul></ul>
+</div>
+<ul id="index">
+<li><h3>Super-module</h3>
+<ul>
+<li><code><a title="gdalhelpers.classes" href="index.html">gdalhelpers.classes</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-classes">Classes</a></h3>
+<ul>
+<li>
+<h4><code><a title="gdalhelpers.classes.DEM.DEM" href="#gdalhelpers.classes.DEM.DEM">DEM</a></code></h4>
+<ul class="">
+<li><code><a title="gdalhelpers.classes.DEM.DEM.destroy_array" href="#gdalhelpers.classes.DEM.DEM.destroy_array">destroy_array</a></code></li>
+<li><code><a title="gdalhelpers.classes.DEM.DEM.from_gdal_raster" href="#gdalhelpers.classes.DEM.DEM.from_gdal_raster">from_gdal_raster</a></code></li>
+<li><code><a title="gdalhelpers.classes.DEM.DEM.get_bounding_box" href="#gdalhelpers.classes.DEM.DEM.get_bounding_box">get_bounding_box</a></code></li>
+<li><code><a title="gdalhelpers.classes.DEM.DEM.get_diagonal_size" href="#gdalhelpers.classes.DEM.DEM.get_diagonal_size">get_diagonal_size</a></code></li>
+<li><code><a title="gdalhelpers.classes.DEM.DEM.get_max_size" href="#gdalhelpers.classes.DEM.DEM.get_max_size">get_max_size</a></code></li>
+<li><code><a title="gdalhelpers.classes.DEM.DEM.get_min_pixel_size" href="#gdalhelpers.classes.DEM.DEM.get_min_pixel_size">get_min_pixel_size</a></code></li>
+<li><code><a title="gdalhelpers.classes.DEM.DEM.get_nodata_value" href="#gdalhelpers.classes.DEM.DEM.get_nodata_value">get_nodata_value</a></code></li>
+<li><code><a title="gdalhelpers.classes.DEM.DEM.get_value_bilinear" href="#gdalhelpers.classes.DEM.DEM.get_value_bilinear">get_value_bilinear</a></code></li>
+<li><code><a title="gdalhelpers.classes.DEM.DEM.get_values_bilinear" href="#gdalhelpers.classes.DEM.DEM.get_values_bilinear">get_values_bilinear</a></code></li>
+<li><code><a title="gdalhelpers.classes.DEM.DEM.get_values_points_bilinear" href="#gdalhelpers.classes.DEM.DEM.get_values_points_bilinear">get_values_points_bilinear</a></code></li>
+<li><code><a title="gdalhelpers.classes.DEM.DEM.load_array" href="#gdalhelpers.classes.DEM.DEM.load_array">load_array</a></code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc"><cite>pdoc</cite> 0.7.2</a>.</p>
+</footer>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+<script>hljs.initHighlightingOnLoad()</script>
+</body>
+</html>
