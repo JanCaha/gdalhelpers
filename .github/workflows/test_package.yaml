@@ -42,13 +42,13 @@ jobs:
           mv -v ./html/gdalhelpers/* ./docs
 
       - name: Set GIT
-          run: |
-            git config --global user.email "action@github.com"
-            git config --global user.name "Github Action"
+        run: |
+          git config --global user.email "action@github.com"
+          git config --global user.name "Github Action"
 
       - name: Deploy to gh-pages branch
-          uses: peaceiris/actions-gh-pages@v2.5.0
-          env:
-            ACTIONS_DEPLOY_KEY: ${{ secrets.ACTIONS_DEPLOY_KEY }}
-            PUBLISH_BRANCH: gh-pages
-            PUBLISH_DIR: ./docs
+        uses: peaceiris/actions-gh-pages@v2.5.0
+        env:
+          ACTIONS_DEPLOY_KEY: ${{ secrets.ACTIONS_DEPLOY_KEY }}
+          PUBLISH_BRANCH: gh-pages
+          PUBLISH_DIR: ./docs
