@@ -18,7 +18,7 @@ jobs:
         run: |
           sudo add-apt-repository ppa:ubuntugis/ubuntugis-unstable
           sudo apt-get update
-          sudo apt-get install gdal-bin python3-numpy libgdal-dev libgeos-dev libproj-dev git
+          sudo apt-get install gdal-bin python3-numpy libgdal-dev libgeos-dev libproj-dev git rsync
 
       - name: Cache Python packages
         uses: actions/cache@v1
@@ -40,6 +40,7 @@ jobs:
           pdoc --html gdalhelpers
           mkdir ./docs
           mv -v ./html/gdalhelpers/* ./docs
+          rsync -r docs_images/ docs
 
       - name: Set GIT
         run: |
