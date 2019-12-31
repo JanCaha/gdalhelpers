@@ -6,3 +6,5 @@ __pycache__
 /.coverage
 /html/*
 /docs
+/tests/test_data/*.qgz
+/tests/test_data/results/*.gpkg
