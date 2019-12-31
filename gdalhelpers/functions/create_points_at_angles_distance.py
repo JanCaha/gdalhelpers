@@ -10,7 +10,7 @@ from gdalhelpers.helpers import layer_helpers, datasource_helpers, geometry_help
 
 
 def create_points_at_angles_distance(input_points_ds: ogr.DataSource,
-                                     angles: List[float] = np.arange(0, 360, step=1).tolist(),
+                                     angles: List[float] = None,
                                      distance: Union[float, int] = 1,
                                      angles_specification_degrees: bool = True,
                                      input_points_id_field: str = None) -> ogr.DataSource:
@@ -24,23 +24,29 @@ def create_points_at_angles_distance(input_points_ds: ogr.DataSource,
         Input points, geometry of the layer has to be `ogr.wkbPoint, ogr.wkbPoint25D, ogr.wkbLineStringM` or
         `ogr.wkbPointZM`.
 
-    angles : list of float
-        Angles at which the resulting points should be created. Default value is list containg integer values from
-        0 to 360. Create with `np.arange(0, 360, step=1).tolist()`.
+    angles : list of float or None, optional
+        Angles at which the resulting points should be created. Default value is `None`which creates list containg
+        integer values from 0 to 360. Createad with coomand `np.arange(0, 360, step=1).tolist()`.
 
-    distance : float or int
+    distance : float or int, optional
         Distance at which the points should be created. Default value is `1`.
 
-    angles_specification_degrees : bool
+    angles_specification_degrees : bool, optional
         Are the angles specified in degrees? Default values is `True`, if `False` the values are in radians.
 
-    input_points_id_field : str
+    input_points_id_field : str, optional
         Name of ID (or other) field from `input_points_ds` that should be carried over the resulting DataSource.
 
     Returns
     -------
     ogr.DataSource
         Virtual `ogr.DataSource` in memory with one layer (named `points`) containing the points.
+
+    Example output
+    -------
+        Following image shows 
+
+    .. image:: create_points_at_angles_distance.png
 
     Raises
     ------
@@ -63,6 +69,9 @@ def create_points_at_angles_distance(input_points_ds: ogr.DataSource,
                                                                                          ogr.wkbLineStringM,
                                                                                          ogr.wkbPointZM])
     values_checks.check_value_is_zero_or_positive(distance, "distance")
+
+    if angles is None:
+        angles = np.arange(0, 360, step=1).tolist()
 
     if angles_specification_degrees:
         angles = [math.radians(x) - math.pi for x in angles]
