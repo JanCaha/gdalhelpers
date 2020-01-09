@@ -25,7 +25,7 @@
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">from osgeo import ogr, osr
-from typing import List, Dict, Any
+from typing import List, Dict, Any, Set
 
 
 def create_layer_points(ds: ogr.DataSource, srs: osr.SpatialReference, layer_name: str) -&gt; None:
@@ -144,6 +144,53 @@ def add_values_from_dict(feature: ogr.Feature, fields_values: Dict[str, Any]) -&
     &#34;&#34;&#34;
     for field, value in fields_values.items():
         feature.SetField(field, value)
+
+
+def get_field_values(layer: ogr.Layer, field_name: str) -&gt; List[Any]:
+    &#34;&#34;&#34;
+    Extract values from a specific field into list.
+
+    Parameters
+    ----------
+    layer : ogr.Layer
+        Layer to get field the values from.
+
+    field_name : str
+        Field to extract values from.
+
+    Returns
+    -------
+    list[Any]
+        List containing the data from the field. The type of elements in list depends on field type of `field`
+        in `layer`.
+    &#34;&#34;&#34;
+    values = [None] * layer.GetFeatureCount()
+    i = 0
+    for feature in layer:
+        values[i] = feature.GetField(field_name)
+        i += 1
+    return values
+
+
+def get_unique_field_values(layer: ogr.Layer, field_name: str) -&gt; Set[Any]:
+    &#34;&#34;&#34;
+    Extract unique values from a specific field into set.
+
+    Parameters
+    ----------
+    layer : ogr.Layer
+        Layer to get field the values from.
+
+    field_name : str
+        Field to extract values from.
+
+    Returns
+    -------
+    set[Any]
+        Set containing the unique values from the field. The type of elements in set depends on field type of `field`
+        in `layer`.
+    &#34;&#34;&#34;
+    return set(get_field_values(layer, field_name))
 
 
 def get_geometry_list(layer: ogr.Layer) -&gt; List[ogr.Geometry]:
@@ -414,6 +461,54 @@ geometry type.</p>
     ds.CreateLayer(layer_name, srs, ogr.wkbPoint25D, [&#39;OVERWRITE=YES&#39;])</code></pre>
 </details>
 </dd>
+<dt id="gdalhelpers.helpers.layer_helpers.get_field_values"><code class="name flex">
+<span>def <span class="ident">get_field_values</span></span>(<span>layer, field_name)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Extract values from a specific field into list.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>layer</code></strong> :&ensp;<code>ogr.Layer</code></dt>
+<dd>Layer to get field the values from.</dd>
+<dt><strong><code>field_name</code></strong> :&ensp;<code>str</code></dt>
+<dd>Field to extract values from.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>list</code>[<code>Any</code>]</dt>
+<dd>List containing the data from the field. The type of elements in list depends on field type of <code>field</code>
+in <code>layer</code>.</dd>
+</dl></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_field_values(layer: ogr.Layer, field_name: str) -&gt; List[Any]:
+    &#34;&#34;&#34;
+    Extract values from a specific field into list.
+
+    Parameters
+    ----------
+    layer : ogr.Layer
+        Layer to get field the values from.
+
+    field_name : str
+        Field to extract values from.
+
+    Returns
+    -------
+    list[Any]
+        List containing the data from the field. The type of elements in list depends on field type of `field`
+        in `layer`.
+    &#34;&#34;&#34;
+    values = [None] * layer.GetFeatureCount()
+    i = 0
+    for feature in layer:
+        values[i] = feature.GetField(field_name)
+        i += 1
+    return values</code></pre>
+</details>
+</dd>
 <dt id="gdalhelpers.helpers.layer_helpers.get_geometry_list"><code class="name flex">
 <span>def <span class="ident">get_geometry_list</span></span>(<span>layer)</span>
 </code></dt>
@@ -458,6 +553,49 @@ geometry type.</p>
     return feature_list</code></pre>
 </details>
 </dd>
+<dt id="gdalhelpers.helpers.layer_helpers.get_unique_field_values"><code class="name flex">
+<span>def <span class="ident">get_unique_field_values</span></span>(<span>layer, field_name)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Extract unique values from a specific field into set.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>layer</code></strong> :&ensp;<code>ogr.Layer</code></dt>
+<dd>Layer to get field the values from.</dd>
+<dt><strong><code>field_name</code></strong> :&ensp;<code>str</code></dt>
+<dd>Field to extract values from.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>set</code>[<code>Any</code>]</dt>
+<dd>Set containing the unique values from the field. The type of elements in set depends on field type of <code>field</code>
+in <code>layer</code>.</dd>
+</dl></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_unique_field_values(layer: ogr.Layer, field_name: str) -&gt; Set[Any]:
+    &#34;&#34;&#34;
+    Extract unique values from a specific field into set.
+
+    Parameters
+    ----------
+    layer : ogr.Layer
+        Layer to get field the values from.
+
+    field_name : str
+        Field to extract values from.
+
+    Returns
+    -------
+    set[Any]
+        Set containing the unique values from the field. The type of elements in set depends on field type of `field`
+        in `layer`.
+    &#34;&#34;&#34;
+    return set(get_field_values(layer, field_name))</code></pre>
+</details>
+</dd>
 </dl>
 </section>
 <section>
@@ -481,7 +619,9 @@ geometry type.</p>
 <li><code><a title="gdalhelpers.helpers.layer_helpers.create_layer_lines_25d" href="#gdalhelpers.helpers.layer_helpers.create_layer_lines_25d">create_layer_lines_25d</a></code></li>
 <li><code><a title="gdalhelpers.helpers.layer_helpers.create_layer_points" href="#gdalhelpers.helpers.layer_helpers.create_layer_points">create_layer_points</a></code></li>
 <li><code><a title="gdalhelpers.helpers.layer_helpers.create_layer_points_25d" href="#gdalhelpers.helpers.layer_helpers.create_layer_points_25d">create_layer_points_25d</a></code></li>
+<li><code><a title="gdalhelpers.helpers.layer_helpers.get_field_values" href="#gdalhelpers.helpers.layer_helpers.get_field_values">get_field_values</a></code></li>
 <li><code><a title="gdalhelpers.helpers.layer_helpers.get_geometry_list" href="#gdalhelpers.helpers.layer_helpers.get_geometry_list">get_geometry_list</a></code></li>
+<li><code><a title="gdalhelpers.helpers.layer_helpers.get_unique_field_values" href="#gdalhelpers.helpers.layer_helpers.get_unique_field_values">get_unique_field_values</a></code></li>
 </ul>
 </li>
 </ul>
