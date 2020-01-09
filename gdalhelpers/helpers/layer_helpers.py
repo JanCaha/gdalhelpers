@@ -1,5 +1,5 @@
 from osgeo import ogr, osr
-from typing import List, Dict, Any
+from typing import List, Dict, Any, Set
 
 
 def create_layer_points(ds: ogr.DataSource, srs: osr.SpatialReference, layer_name: str) -> None:
@@ -118,6 +118,53 @@ def add_values_from_dict(feature: ogr.Feature, fields_values: Dict[str, Any]) ->
     """
     for field, value in fields_values.items():
         feature.SetField(field, value)
+
+
+def get_field_values(layer: ogr.Layer, field_name: str) -> List[Any]:
+    """
+    Extract values from a specific field into list.
+
+    Parameters
+    ----------
+    layer : ogr.Layer
+        Layer to get field the values from.
+
+    field_name : str
+        Field to extract values from.
+
+    Returns
+    -------
+    list[Any]
+        List containing the data from the field. The type of elements in list depends on field type of `field`
+        in `layer`.
+    """
+    values = [None] * layer.GetFeatureCount()
+    i = 0
+    for feature in layer:
+        values[i] = feature.GetField(field_name)
+        i += 1
+    return values
+
+
+def get_unique_field_values(layer: ogr.Layer, field_name: str) -> Set[Any]:
+    """
+    Extract unique values from a specific field into set.
+
+    Parameters
+    ----------
+    layer : ogr.Layer
+        Layer to get field the values from.
+
+    field_name : str
+        Field to extract values from.
+
+    Returns
+    -------
+    set[Any]
+        Set containing the unique values from the field. The type of elements in set depends on field type of `field`
+        in `layer`.
+    """
+    return set(get_field_values(layer, field_name))
 
 
 def get_geometry_list(layer: ogr.Layer) -> List[ogr.Geometry]:

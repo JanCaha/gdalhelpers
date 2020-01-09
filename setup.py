@@ -2,7 +2,7 @@
 from setuptools import setup, find_packages
 
 setup(name='gdalhelpers',
-      version='0.1.6',
+      version='0.1.7',
       description='GDAL helpers, checks and tools package',
       url='https://github.com/JanCaha/gdalhelpers',
       author='Jan Caha',

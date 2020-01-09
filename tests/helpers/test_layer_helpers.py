@@ -59,3 +59,15 @@ class LayerHelpersTests(unittest.TestCase):
         self.assertIsInstance(geom_list, list)
         self.assertEqual(len(geom_list), feature_count)
         self.assertIsInstance(geom_list[0], ogr.Geometry)
+
+    def test_get_field_values(self):
+        field_values = layer_helpers.get_field_values(self.ds_points.GetLayer(), "id_point")
+
+        self.assertIsInstance(field_values, list)
+        self.assertListEqual(field_values, [1, 2, 3, 4, 5])
+
+    def test_get_unique_field_values(self):
+        unique_field_values = layer_helpers.get_unique_field_values(self.ds_points.GetLayer(), "id_point")
+
+        self.assertIsInstance(unique_field_values, set)
+        self.assertSetEqual(unique_field_values, {1, 2, 3, 4, 5})
