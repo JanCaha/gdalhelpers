@@ -8,3 +8,5 @@ __pycache__
 /docs
 /tests/test_data/*.qgz
 /tests/test_data/results/*.gpkg
+/dist
+/build
